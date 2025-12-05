@@ -102,7 +102,6 @@ const initialRisks = [{
   flagged: false,
   confirmed: false
 }];
-
 type RiskView = "list" | "proposal" | "customize";
 const timeSlots = [{
   id: 1,
@@ -150,7 +149,7 @@ export function MeetingOutcomesPanel({
   const [showJiraModal, setShowJiraModal] = useState(false);
   const [showEmailModal, setShowEmailModal] = useState(false);
   const [selectedTimeSlot, setSelectedTimeSlot] = useState<number | null>(null);
-  
+
   // Risk flow state
   const [selectedRiskId, setSelectedRiskId] = useState<number | null>(null);
   const [riskView, setRiskView] = useState<RiskView>("list");
@@ -418,45 +417,36 @@ export function MeetingOutcomesPanel({
             })}
                 </div>}
 
-              {activeTab === "risks" && (
-                <AnimatePresence mode="wait">
-                  {riskView === "list" && (
-                    <motion.div
-                      key="risk-list"
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      className="space-y-4"
-                    >
-                      {risks.map(risk => (
-                        <motion.div
-                          key={risk.id}
-                          initial={{ opacity: 0, y: 10 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          className={cn(
-                            "rounded-lg border bg-card p-4 cursor-pointer transition-all hover:border-primary/50",
-                            risk.confirmed ? "border-success/50 bg-success/5" : "border-border"
-                          )}
-                          onClick={() => {
-                            if (!risk.confirmed) {
-                              setSelectedRiskId(risk.id);
-                              setRiskView("proposal");
-                            }
-                          }}
-                        >
+              {activeTab === "risks" && <AnimatePresence mode="wait">
+                  {riskView === "list" && <motion.div key="risk-list" initial={{
+              opacity: 0
+            }} animate={{
+              opacity: 1
+            }} exit={{
+              opacity: 0
+            }} className="space-y-4">
+                      {risks.map(risk => <motion.div key={risk.id} initial={{
+                opacity: 0,
+                y: 10
+              }} animate={{
+                opacity: 1,
+                y: 0
+              }} className={cn("rounded-lg border bg-card p-4 cursor-pointer transition-all hover:border-primary/50", risk.confirmed ? "border-success/50 bg-success/5" : "border-border")} onClick={() => {
+                if (!risk.confirmed) {
+                  setSelectedRiskId(risk.id);
+                  setRiskView("proposal");
+                }
+              }}>
                           <div className="flex items-start gap-3">
                             <AlertTriangle className={cn("h-5 w-5 mt-0.5 shrink-0", risk.severity === "high" ? "text-destructive" : "text-warning")} />
                             <div className="flex-1">
                               <p className="font-medium text-foreground">{risk.title}</p>
-                              {risk.confirmed ? (
-                                <div className="mt-2 rounded-md bg-success/10 p-2">
+                              {risk.confirmed ? <div className="mt-2 rounded-md bg-success/10 p-2">
                                   <p className="text-xs text-success flex items-center gap-1.5">
                                     <Check className="h-3 w-3" />
                                     Risk flagged in EMCPS Launch · Reminder set for Dec 15
                                   </p>
-                                </div>
-                              ) : (
-                                <>
+                                </div> : <>
                                   <p className="mt-1 text-sm text-muted-foreground">
                                     Mitigation: {risk.mitigation}
                                   </p>
@@ -466,33 +456,29 @@ export function MeetingOutcomesPanel({
                                       <ArrowRight className="h-3 w-3" />
                                     </Button>
                                   </div>
-                                </>
-                              )}
+                                </>}
                             </div>
                             <Badge variant={risk.severity === "high" ? "destructive" : "warning"}>
                               {risk.severity}
                             </Badge>
                           </div>
-                        </motion.div>
-                      ))}
-                    </motion.div>
-                  )}
+                        </motion.div>)}
+                    </motion.div>}
 
-                  {riskView === "proposal" && selectedRiskId && (
-                    <motion.div
-                      key="risk-proposal"
-                      initial={{ opacity: 0, x: 20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: -20 }}
-                      className="space-y-6"
-                    >
-                      <button
-                        onClick={() => {
-                          setRiskView("list");
-                          setSelectedRiskId(null);
-                        }}
-                        className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
-                      >
+                  {riskView === "proposal" && selectedRiskId && <motion.div key="risk-proposal" initial={{
+              opacity: 0,
+              x: 20
+            }} animate={{
+              opacity: 1,
+              x: 0
+            }} exit={{
+              opacity: 0,
+              x: -20
+            }} className="space-y-6">
+                      <button onClick={() => {
+                setRiskView("list");
+                setSelectedRiskId(null);
+              }} className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors">
                         ← Back to risks
                       </button>
 
@@ -513,71 +499,56 @@ export function MeetingOutcomesPanel({
                           <div className="h-8 w-8 rounded-full bg-primary/20 flex items-center justify-center">
                             <span className="text-primary text-sm">AI</span>
                           </div>
-                          <span className="font-medium text-foreground">Workspace proposes:</span>
+                          <span className="font-medium text-foreground">I can...</span>
                         </div>
                         <p className="text-muted-foreground mb-4">"I can:</p>
                         <ul className="space-y-3 text-sm">
-                          <li 
-                            className="flex items-center gap-3 cursor-pointer group"
-                            onClick={() => setRiskOptions(prev => ({ ...prev, flagRisk: !prev.flagRisk }))}
-                          >
-                            <div className={cn(
-                              "h-5 w-5 rounded border-2 flex items-center justify-center shrink-0 transition-colors",
-                              riskOptions.flagRisk ? "border-primary bg-primary" : "border-muted-foreground bg-transparent"
-                            )}>
+                          <li className="flex items-center gap-3 cursor-pointer group" onClick={() => setRiskOptions(prev => ({
+                    ...prev,
+                    flagRisk: !prev.flagRisk
+                  }))}>
+                            <div className={cn("h-5 w-5 rounded border-2 flex items-center justify-center shrink-0 transition-colors", riskOptions.flagRisk ? "border-primary bg-primary" : "border-muted-foreground bg-transparent")}>
                               {riskOptions.flagRisk && <Check className="h-3 w-3 text-primary-foreground" />}
                             </div>
                             <span className="group-hover:text-foreground transition-colors">Flag this risk in the <strong>EMCPS Launch</strong> workspace</span>
                           </li>
-                          <li 
-                            className="flex items-center gap-3 cursor-pointer group"
-                            onClick={() => setRiskOptions(prev => ({ ...prev, draftNote: !prev.draftNote }))}
-                          >
-                            <div className={cn(
-                              "h-5 w-5 rounded border-2 flex items-center justify-center shrink-0 transition-colors",
-                              riskOptions.draftNote ? "border-primary bg-primary" : "border-muted-foreground bg-transparent"
-                            )}>
+                          <li className="flex items-center gap-3 cursor-pointer group" onClick={() => setRiskOptions(prev => ({
+                    ...prev,
+                    draftNote: !prev.draftNote
+                  }))}>
+                            <div className={cn("h-5 w-5 rounded border-2 flex items-center justify-center shrink-0 transition-colors", riskOptions.draftNote ? "border-primary bg-primary" : "border-muted-foreground bg-transparent")}>
                               {riskOptions.draftNote && <Check className="h-3 w-3 text-primary-foreground" />}
                             </div>
                             <span className="group-hover:text-foreground transition-colors">Draft a risk note for your next status update</span>
                           </li>
-                          <li 
-                            className="flex items-center gap-3 cursor-pointer group"
-                            onClick={() => setRiskOptions(prev => ({ ...prev, createReminder: !prev.createReminder }))}
-                          >
-                            <div className={cn(
-                              "h-5 w-5 rounded border-2 flex items-center justify-center shrink-0 transition-colors",
-                              riskOptions.createReminder ? "border-primary bg-primary" : "border-muted-foreground bg-transparent"
-                            )}>
+                          <li className="flex items-center gap-3 cursor-pointer group" onClick={() => setRiskOptions(prev => ({
+                    ...prev,
+                    createReminder: !prev.createReminder
+                  }))}>
+                            <div className={cn("h-5 w-5 rounded border-2 flex items-center justify-center shrink-0 transition-colors", riskOptions.createReminder ? "border-primary bg-primary" : "border-muted-foreground bg-transparent")}>
                               {riskOptions.createReminder && <Check className="h-3 w-3 text-primary-foreground" />}
                             </div>
                             <span className="group-hover:text-foreground transition-colors">Create an <strong>Outlook reminder</strong> 5 days before Dec 20"</span>
                           </li>
                         </ul>
-                        <Button
-                          className="mt-5 w-full gap-1.5"
-                          variant="glow"
-                          onClick={() => setRiskView("customize")}
-                        >
+                        <Button className="mt-5 w-full gap-1.5" variant="glow" onClick={() => setRiskView("customize")}>
                           Customize & Proceed
                           <ArrowRight className="h-4 w-4" />
                         </Button>
                       </div>
-                    </motion.div>
-                  )}
+                    </motion.div>}
 
-                  {riskView === "customize" && selectedRiskId && (
-                    <motion.div
-                      key="risk-customize"
-                      initial={{ opacity: 0, x: 20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: -20 }}
-                      className="space-y-6"
-                    >
-                      <button
-                        onClick={() => setRiskView("proposal")}
-                        className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
-                      >
+                  {riskView === "customize" && selectedRiskId && <motion.div key="risk-customize" initial={{
+              opacity: 0,
+              x: 20
+            }} animate={{
+              opacity: 1,
+              x: 0
+            }} exit={{
+              opacity: 0,
+              x: -20
+            }} className="space-y-6">
+                      <button onClick={() => setRiskView("proposal")} className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors">
                         ← Back
                       </button>
 
@@ -606,12 +577,7 @@ export function MeetingOutcomesPanel({
                             <div className="h-6 w-6 rounded-full bg-primary/20 flex items-center justify-center text-xs font-medium text-primary">2</div>
                             <Label className="font-medium">Risk Note for Status Email</Label>
                           </div>
-                          <Textarea
-                            value={riskNote}
-                            onChange={(e) => setRiskNote(e.target.value)}
-                            rows={3}
-                            className="mt-2 text-sm"
-                          />
+                          <Textarea value={riskNote} onChange={e => setRiskNote(e.target.value)} rows={3} className="mt-2 text-sm" />
                           <p className="text-xs text-muted-foreground mt-2">
                             Will be saved as a snippet for your next status email
                           </p>
@@ -654,32 +620,26 @@ export function MeetingOutcomesPanel({
                         </div>
                       </div>
 
-                      <Button
-                        className="w-full gap-1.5"
-                        variant="glow"
-                        onClick={() => {
-                          setRisks(prev => prev.map(r =>
-                            r.id === selectedRiskId ? { ...r, flagged: true, confirmed: true } : r
-                          ));
-                          toast.success(
-                            <div className="space-y-1">
+                      <Button className="w-full gap-1.5" variant="glow" onClick={() => {
+                setRisks(prev => prev.map(r => r.id === selectedRiskId ? {
+                  ...r,
+                  flagged: true,
+                  confirmed: true
+                } : r));
+                toast.success(<div className="space-y-1">
                               <p className="font-medium">Actions confirmed</p>
                               <p className="text-sm text-muted-foreground">
                                 Risk flagged · Note saved · Reminder created
                               </p>
-                            </div>
-                          );
-                          setRiskView("list");
-                          setSelectedRiskId(null);
-                        }}
-                      >
+                            </div>);
+                setRiskView("list");
+                setSelectedRiskId(null);
+              }}>
                         <Check className="h-4 w-4" />
                         Confirm Actions
                       </Button>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              )}
+                    </motion.div>}
+                </AnimatePresence>}
             </div>
 
             {/* Footer */}
