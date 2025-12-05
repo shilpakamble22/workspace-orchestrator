@@ -1,9 +1,18 @@
 import { useState } from "react";
-import { X, CheckCircle2, GitBranch, AlertTriangle, ArrowRight, ExternalLink, Calendar, MessageSquare, Check } from "lucide-react";
+import { X, CheckCircle2, GitBranch, AlertTriangle, ArrowRight, ExternalLink, Calendar, Check, Clock, Users, Video, FileText, Link2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Calendar as CalendarComponent } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { format, addDays } from "date-fns";
+import { toast } from "sonner";
 
 interface MeetingOutcomesPanelProps {
   isOpen: boolean;
@@ -18,34 +27,34 @@ const tabs = [
   { id: "risks" as TabType, label: "Risks", icon: AlertTriangle, count: 2 },
 ];
 
-const actions = [
+const initialActions = [
   {
     id: 1,
     title: "Set up performance testing for EMCPS connectors with a 2-week SLA",
     assignee: "Ankit Gupta",
-    suggestion: "Create a Jira ticket in project EMCPS-Core?",
-    linked: null,
+    type: "jira" as const,
+    linked: null as string | null,
   },
   {
     id: 2,
     title: "Schedule follow-up with Support + Legal to finalize data governance FAQ",
     assignee: "Priya Sharma",
-    suggestion: "Create a 45-minute follow-up in Outlook?",
-    linked: null,
+    type: "meeting" as const,
+    linked: null as string | null,
   },
   {
     id: 3,
     title: "Review and update API documentation for EMCPS connectors",
     assignee: "Dev Team",
-    suggestion: "Create Confluence task?",
+    type: "jira" as const,
     linked: "EMCPS-2141",
   },
   {
     id: 4,
     title: "Prepare executive summary for LA launch",
     assignee: "Priya Sharma",
-    suggestion: "Draft email in Outlook?",
-    linked: null,
+    type: "email" as const,
+    linked: null as string | null,
   },
 ];
 
@@ -88,12 +97,85 @@ const risks = [
   },
 ];
 
+const timeSlots = [
+  { id: 1, label: "Tue 2:00–2:45 p.m.", date: "Dec 10", time: "2:00 PM" },
+  { id: 2, label: "Wed 10:00–10:45 a.m.", date: "Dec 11", time: "10:00 AM" },
+  { id: 3, label: "Thu 3:00–3:45 p.m.", date: "Dec 12", time: "3:00 PM" },
+];
+
+const meetingParticipants = [
+  { name: "Sarah Chen", role: "Support Lead", email: "sarah.chen@oracle.com" },
+  { name: "Michael Torres", role: "Legal Counsel", email: "m.torres@oracle.com" },
+  { name: "Jennifer Park", role: "Legal Associate", email: "j.park@oracle.com" },
+  { name: "David Kim", role: "Support Engineer", email: "d.kim@oracle.com" },
+];
+
 export function MeetingOutcomesPanel({ isOpen, onClose }: MeetingOutcomesPanelProps) {
   const [activeTab, setActiveTab] = useState<TabType>("actions");
-  const [completedActions, setCompletedActions] = useState<number[]>([]);
+  const [actions, setActions] = useState(initialActions);
+  const [expandedAction, setExpandedAction] = useState<number | null>(null);
+  const [showScheduleModal, setShowScheduleModal] = useState(false);
+  const [selectedTimeSlot, setSelectedTimeSlot] = useState<number | null>(null);
+  
+  // Jira form state
+  const [jiraForm, setJiraForm] = useState({
+    project: "EMCPS-Core",
+    summary: "",
+    description: "",
+    assignee: "",
+    dueDate: addDays(new Date(), 14),
+  });
 
-  const handleActionComplete = (id: number) => {
-    setCompletedActions((prev) => [...prev, id]);
+  const handleConfigureJira = (action: typeof initialActions[0]) => {
+    setExpandedAction(action.id);
+    setJiraForm({
+      project: "EMCPS-Core",
+      summary: action.title,
+      description: `**From Zoom AIC Meeting**: EMCPS Launch – Go/No-Go Checkpoint\n\n**Meeting Date**: December 5, 2024, 9:00 AM PST\n\n**Attendees**: Priya Sharma, Ankit Gupta, Sarah Chen, Michael Torres, Dev Team leads\n\n**Action Item**: ${action.title}\n\n[View full Zoom summary →](https://zoom.us/recording/emcps-launch-dec5)`,
+      assignee: action.assignee,
+      dueDate: addDays(new Date(), 14),
+    });
+  };
+
+  const handleCreateJiraTicket = (actionId: number) => {
+    const ticketId = `EMCPS-${2143 + Math.floor(Math.random() * 10)}`;
+    
+    setActions(prev => prev.map(a => 
+      a.id === actionId ? { ...a, linked: ticketId } : a
+    ));
+    setExpandedAction(null);
+    
+    toast.success(
+      <div className="flex items-center justify-between gap-4">
+        <span>Created Jira ticket <strong>{ticketId}</strong></span>
+        <div className="flex items-center gap-2">
+          <button className="text-primary hover:underline text-sm font-medium">View in Jira</button>
+          <span className="text-muted-foreground">|</span>
+          <button className="text-primary hover:underline text-sm font-medium">Pin to EMCPS Launch</button>
+        </div>
+      </div>
+    );
+  };
+
+  const handleScheduleMeeting = (actionId: number) => {
+    setExpandedAction(actionId);
+    setShowScheduleModal(true);
+    setSelectedTimeSlot(null);
+  };
+
+  const handleCreateOutlookEvent = (actionId: number) => {
+    setActions(prev => prev.map(a => 
+      a.id === actionId ? { ...a, linked: "Outlook Event" } : a
+    ));
+    setShowScheduleModal(false);
+    setExpandedAction(null);
+    
+    toast.success(
+      <div className="flex items-center justify-between gap-4">
+        <span>Follow-up meeting created in Outlook</span>
+        <button className="text-primary hover:underline text-sm font-medium">View event</button>
+      </div>
+    );
   };
 
   return (
@@ -115,7 +197,7 @@ export function MeetingOutcomesPanel({ isOpen, onClose }: MeetingOutcomesPanelPr
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
             transition={{ type: "spring", damping: 25, stiffness: 200 }}
-            className="fixed right-0 top-0 z-50 h-full w-full max-w-xl border-l border-border bg-card shadow-2xl overflow-hidden flex flex-col"
+            className="fixed right-0 top-0 z-50 h-full w-full max-w-2xl border-l border-border bg-card shadow-2xl overflow-hidden flex flex-col"
           >
             {/* Header */}
             <div className="flex items-center justify-between border-b border-border px-6 py-4">
@@ -159,57 +241,185 @@ export function MeetingOutcomesPanel({ isOpen, onClose }: MeetingOutcomesPanelPr
               {activeTab === "actions" && (
                 <div className="space-y-4">
                   {actions.map((action) => {
-                    const isCompleted = completedActions.includes(action.id);
+                    const isExpanded = expandedAction === action.id;
+                    const isCompleted = action.linked !== null;
+                    
                     return (
                       <motion.div
                         key={action.id}
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
+                        layout
                         className={cn(
-                          "rounded-lg border border-border bg-card p-4 transition-all",
-                          isCompleted && "opacity-50"
+                          "rounded-lg border bg-card transition-all",
+                          isExpanded ? "border-primary/50" : "border-border",
+                          isCompleted && "opacity-75"
                         )}
                       >
-                        <div className="flex items-start gap-3">
-                          <div className={cn(
-                            "mt-1 h-5 w-5 rounded-full border-2 flex items-center justify-center shrink-0 transition-colors",
-                            isCompleted ? "border-success bg-success" : "border-muted-foreground"
-                          )}>
-                            {isCompleted && <Check className="h-3 w-3 text-success-foreground" />}
-                          </div>
-                          <div className="flex-1">
-                            <p className="font-medium text-foreground">{action.title}</p>
-                            <p className="mt-1 text-sm text-muted-foreground">
-                              Suggested: {action.assignee}
-                            </p>
-                            
-                            {action.linked ? (
-                              <Badge variant="info" className="mt-3 gap-1.5">
-                                <ExternalLink className="h-3 w-3" />
-                                Linked: Jira {action.linked}
-                              </Badge>
-                            ) : !isCompleted && (
-                              <div className="mt-3 flex items-center gap-2">
-                                <Button
-                                  size="sm"
-                                  variant="outline"
-                                  className="gap-1.5"
-                                  onClick={() => handleActionComplete(action.id)}
-                                >
-                                  {action.suggestion?.includes("Jira") && "Create Jira Ticket"}
-                                  {action.suggestion?.includes("Outlook") && (
-                                    <>
+                        <div className="p-4">
+                          <div className="flex items-start gap-3">
+                            <div className={cn(
+                              "mt-1 h-5 w-5 rounded-full border-2 flex items-center justify-center shrink-0 transition-colors",
+                              isCompleted ? "border-success bg-success" : "border-muted-foreground"
+                            )}>
+                              {isCompleted && <Check className="h-3 w-3 text-success-foreground" />}
+                            </div>
+                            <div className="flex-1">
+                              <p className="font-medium text-foreground">{action.title}</p>
+                              <p className="mt-1 text-sm text-muted-foreground">
+                                Suggested: {action.assignee}
+                              </p>
+                              
+                              {action.linked ? (
+                                <Badge variant="info" className="mt-3 gap-1.5">
+                                  <ExternalLink className="h-3 w-3" />
+                                  Linked: {action.type === "jira" ? `Jira ${action.linked}` : action.linked}
+                                </Badge>
+                              ) : !isExpanded && (
+                                <div className="mt-3 flex items-center gap-2">
+                                  {action.type === "jira" && (
+                                    <Button
+                                      size="sm"
+                                      variant="outline"
+                                      className="gap-1.5"
+                                      onClick={() => handleConfigureJira(action)}
+                                    >
+                                      Configure
+                                    </Button>
+                                  )}
+                                  {action.type === "meeting" && (
+                                    <Button
+                                      size="sm"
+                                      variant="outline"
+                                      className="gap-1.5"
+                                      onClick={() => handleScheduleMeeting(action.id)}
+                                    >
                                       <Calendar className="h-3 w-3" />
                                       Schedule Meeting
-                                    </>
+                                    </Button>
                                   )}
-                                  {action.suggestion?.includes("Confluence") && "Create Task"}
-                                  {action.suggestion?.includes("email") && "Draft Email"}
-                                </Button>
-                              </div>
-                            )}
+                                  {action.type === "email" && (
+                                    <Button size="sm" variant="outline" className="gap-1.5">
+                                      Draft Email
+                                    </Button>
+                                  )}
+                                </div>
+                              )}
+                            </div>
                           </div>
                         </div>
+
+                        {/* Inline Jira Form */}
+                        <AnimatePresence>
+                          {isExpanded && action.type === "jira" && (
+                            <motion.div
+                              initial={{ height: 0, opacity: 0 }}
+                              animate={{ height: "auto", opacity: 1 }}
+                              exit={{ height: 0, opacity: 0 }}
+                              transition={{ duration: 0.2 }}
+                              className="overflow-hidden"
+                            >
+                              <div className="border-t border-border bg-muted/30 p-4 space-y-4">
+                                <div className="flex items-center gap-2 text-sm font-medium text-foreground">
+                                  <FileText className="h-4 w-4 text-blue-500" />
+                                  Create Jira Ticket
+                                </div>
+
+                                <div className="grid grid-cols-2 gap-4">
+                                  <div className="space-y-2">
+                                    <Label>Project</Label>
+                                    <Select value={jiraForm.project} onValueChange={(v) => setJiraForm(f => ({ ...f, project: v }))}>
+                                      <SelectTrigger>
+                                        <SelectValue />
+                                      </SelectTrigger>
+                                      <SelectContent>
+                                        <SelectItem value="EMCPS-Core">EMCPS-Core</SelectItem>
+                                        <SelectItem value="EMCPS-Infra">EMCPS-Infra</SelectItem>
+                                        <SelectItem value="EMCPS-UI">EMCPS-UI</SelectItem>
+                                      </SelectContent>
+                                    </Select>
+                                  </div>
+
+                                  <div className="space-y-2">
+                                    <Label>Assignee</Label>
+                                    <Select value={jiraForm.assignee} onValueChange={(v) => setJiraForm(f => ({ ...f, assignee: v }))}>
+                                      <SelectTrigger>
+                                        <SelectValue />
+                                      </SelectTrigger>
+                                      <SelectContent>
+                                        <SelectItem value="Ankit Gupta">Ankit Gupta</SelectItem>
+                                        <SelectItem value="Priya Sharma">Priya Sharma</SelectItem>
+                                        <SelectItem value="Sarah Chen">Sarah Chen</SelectItem>
+                                        <SelectItem value="Dev Team">Dev Team</SelectItem>
+                                      </SelectContent>
+                                    </Select>
+                                  </div>
+                                </div>
+
+                                <div className="space-y-2">
+                                  <Label>Summary</Label>
+                                  <Input 
+                                    value={jiraForm.summary} 
+                                    onChange={(e) => setJiraForm(f => ({ ...f, summary: e.target.value }))}
+                                  />
+                                </div>
+
+                                <div className="space-y-2">
+                                  <Label>Description</Label>
+                                  <Textarea 
+                                    value={jiraForm.description} 
+                                    onChange={(e) => setJiraForm(f => ({ ...f, description: e.target.value }))}
+                                    rows={6}
+                                    className="text-sm font-mono"
+                                  />
+                                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                                    <Link2 className="h-3 w-3" />
+                                    <span>Includes: Meeting excerpt, date/time, attendees, Zoom summary link</span>
+                                  </div>
+                                </div>
+
+                                <div className="space-y-2">
+                                  <Label>Due Date</Label>
+                                  <Popover>
+                                    <PopoverTrigger asChild>
+                                      <Button variant="outline" className="w-full justify-start text-left font-normal">
+                                        <Calendar className="mr-2 h-4 w-4" />
+                                        {format(jiraForm.dueDate, "PPP")}
+                                      </Button>
+                                    </PopoverTrigger>
+                                    <PopoverContent className="w-auto p-0" align="start">
+                                      <CalendarComponent
+                                        mode="single"
+                                        selected={jiraForm.dueDate}
+                                        onSelect={(date) => date && setJiraForm(f => ({ ...f, dueDate: date }))}
+                                        initialFocus
+                                        className="pointer-events-auto"
+                                      />
+                                    </PopoverContent>
+                                  </Popover>
+                                  <p className="text-xs text-muted-foreground">Suggested: +14 days from today</p>
+                                </div>
+
+                                <div className="flex items-center gap-2 pt-2">
+                                  <Button 
+                                    className="gap-1.5" 
+                                    variant="glow"
+                                    onClick={() => handleCreateJiraTicket(action.id)}
+                                  >
+                                    Create Jira Ticket
+                                    <ArrowRight className="h-4 w-4" />
+                                  </Button>
+                                  <Button 
+                                    variant="ghost" 
+                                    onClick={() => setExpandedAction(null)}
+                                  >
+                                    Cancel
+                                  </Button>
+                                </div>
+                              </div>
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
                       </motion.div>
                     );
                   })}
@@ -289,6 +499,126 @@ export function MeetingOutcomesPanel({ isOpen, onClose }: MeetingOutcomesPanelPr
               </Button>
             </div>
           </motion.div>
+
+          {/* Schedule Meeting Modal */}
+          <Dialog open={showScheduleModal} onOpenChange={setShowScheduleModal}>
+            <DialogContent className="max-w-lg">
+              <DialogHeader>
+                <DialogTitle className="flex items-center gap-2">
+                  <Video className="h-5 w-5 text-primary" />
+                  Schedule Follow-up Meeting
+                </DialogTitle>
+              </DialogHeader>
+
+              <div className="space-y-5 py-2">
+                {/* Participants */}
+                <div className="space-y-3">
+                  <Label className="flex items-center gap-2">
+                    <Users className="h-4 w-4 text-muted-foreground" />
+                    Participants
+                  </Label>
+                  <div className="flex flex-wrap gap-2">
+                    {meetingParticipants.map((p) => (
+                      <Badge key={p.email} variant="secondary" className="gap-1.5 py-1.5 px-3">
+                        {p.name}
+                        <span className="text-muted-foreground text-[10px]">({p.role})</span>
+                        <button className="ml-1 hover:text-destructive">×</button>
+                      </Badge>
+                    ))}
+                  </div>
+                  <p className="text-xs text-muted-foreground">Auto-filled from Support + Legal attendees</p>
+                </div>
+
+                {/* Duration */}
+                <div className="space-y-2">
+                  <Label className="flex items-center gap-2">
+                    <Clock className="h-4 w-4 text-muted-foreground" />
+                    Duration
+                  </Label>
+                  <Select defaultValue="45">
+                    <SelectTrigger className="w-40">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="30">30 minutes</SelectItem>
+                      <SelectItem value="45">45 minutes</SelectItem>
+                      <SelectItem value="60">60 minutes</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {/* Time Slots */}
+                <div className="space-y-3">
+                  <Label className="flex items-center gap-2">
+                    <Calendar className="h-4 w-4 text-muted-foreground" />
+                    Suggested Time Slots
+                  </Label>
+                  <div className="grid gap-2">
+                    {timeSlots.map((slot) => (
+                      <button
+                        key={slot.id}
+                        onClick={() => setSelectedTimeSlot(slot.id)}
+                        className={cn(
+                          "flex items-center justify-between rounded-lg border p-3 text-left transition-all",
+                          selectedTimeSlot === slot.id
+                            ? "border-primary bg-primary/10 text-foreground"
+                            : "border-border bg-card hover:border-primary/50"
+                        )}
+                      >
+                        <div className="flex items-center gap-3">
+                          <div className={cn(
+                            "h-4 w-4 rounded-full border-2 flex items-center justify-center",
+                            selectedTimeSlot === slot.id ? "border-primary bg-primary" : "border-muted-foreground"
+                          )}>
+                            {selectedTimeSlot === slot.id && <Check className="h-2.5 w-2.5 text-primary-foreground" />}
+                          </div>
+                          <span className="font-medium">{slot.label}</span>
+                        </div>
+                        <span className="text-sm text-muted-foreground">{slot.date}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Body Draft */}
+                <div className="space-y-2">
+                  <Label className="flex items-center gap-2">
+                    <FileText className="h-4 w-4 text-muted-foreground" />
+                    Meeting Body (Draft)
+                  </Label>
+                  <Textarea 
+                    rows={5}
+                    defaultValue={`Following up from the EMCPS Launch Go/No-Go meeting on Dec 5. This session will focus on finalizing the data governance FAQ before the Jan 15 LA launch.
+
+**Objectives:**
+• Review and approve final FAQ content
+• Confirm legal sign-off timeline
+• Address any remaining questions
+
+**References:**
+• FAQ Draft: [Confluence Link]
+• Related tickets: EMCPS-2143, EMCPS-2141`}
+                    className="text-sm"
+                  />
+                </div>
+              </div>
+
+              <DialogFooter>
+                <Button variant="outline" onClick={() => setShowScheduleModal(false)}>
+                  Cancel
+                </Button>
+                <Button 
+                  variant="glow" 
+                  className="gap-1.5"
+                  disabled={!selectedTimeSlot}
+                  onClick={() => expandedAction && handleCreateOutlookEvent(expandedAction)}
+                >
+                  Create Outlook Event
+                  <ArrowRight className="h-4 w-4" />
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
         </>
       )}
     </AnimatePresence>
