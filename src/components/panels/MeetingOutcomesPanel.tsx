@@ -157,6 +157,11 @@ export function MeetingOutcomesPanel({
   const [riskNote, setRiskNote] = useState("Performance testing timeline is at risk. Current status: awaiting environment setup. Recommend escalating to DevOps lead if no progress by Dec 12.");
   const [reminderDate, setReminderDate] = useState("Dec 15");
   const [reminderTime, setReminderTime] = useState("9:00 AM");
+  const [riskOptions, setRiskOptions] = useState({
+    flagRisk: true,
+    draftNote: true,
+    createReminder: true
+  });
 
   // Jira form state
   const [jiraForm, setJiraForm] = useState({
@@ -512,23 +517,41 @@ export function MeetingOutcomesPanel({
                         </div>
                         <p className="text-muted-foreground mb-4">"I can:</p>
                         <ul className="space-y-3 text-sm">
-                          <li className="flex items-center gap-3">
-                            <div className="h-5 w-5 rounded border-2 border-primary bg-primary flex items-center justify-center shrink-0">
-                              <Check className="h-3 w-3 text-primary-foreground" />
+                          <li 
+                            className="flex items-center gap-3 cursor-pointer group"
+                            onClick={() => setRiskOptions(prev => ({ ...prev, flagRisk: !prev.flagRisk }))}
+                          >
+                            <div className={cn(
+                              "h-5 w-5 rounded border-2 flex items-center justify-center shrink-0 transition-colors",
+                              riskOptions.flagRisk ? "border-primary bg-primary" : "border-muted-foreground bg-transparent"
+                            )}>
+                              {riskOptions.flagRisk && <Check className="h-3 w-3 text-primary-foreground" />}
                             </div>
-                            <span>Flag this risk in the <strong>EMCPS Launch</strong> workspace</span>
+                            <span className="group-hover:text-foreground transition-colors">Flag this risk in the <strong>EMCPS Launch</strong> workspace</span>
                           </li>
-                          <li className="flex items-center gap-3">
-                            <div className="h-5 w-5 rounded border-2 border-primary bg-primary flex items-center justify-center shrink-0">
-                              <Check className="h-3 w-3 text-primary-foreground" />
+                          <li 
+                            className="flex items-center gap-3 cursor-pointer group"
+                            onClick={() => setRiskOptions(prev => ({ ...prev, draftNote: !prev.draftNote }))}
+                          >
+                            <div className={cn(
+                              "h-5 w-5 rounded border-2 flex items-center justify-center shrink-0 transition-colors",
+                              riskOptions.draftNote ? "border-primary bg-primary" : "border-muted-foreground bg-transparent"
+                            )}>
+                              {riskOptions.draftNote && <Check className="h-3 w-3 text-primary-foreground" />}
                             </div>
-                            <span>Draft a risk note for your next status update</span>
+                            <span className="group-hover:text-foreground transition-colors">Draft a risk note for your next status update</span>
                           </li>
-                          <li className="flex items-center gap-3">
-                            <div className="h-5 w-5 rounded border-2 border-primary bg-primary flex items-center justify-center shrink-0">
-                              <Check className="h-3 w-3 text-primary-foreground" />
+                          <li 
+                            className="flex items-center gap-3 cursor-pointer group"
+                            onClick={() => setRiskOptions(prev => ({ ...prev, createReminder: !prev.createReminder }))}
+                          >
+                            <div className={cn(
+                              "h-5 w-5 rounded border-2 flex items-center justify-center shrink-0 transition-colors",
+                              riskOptions.createReminder ? "border-primary bg-primary" : "border-muted-foreground bg-transparent"
+                            )}>
+                              {riskOptions.createReminder && <Check className="h-3 w-3 text-primary-foreground" />}
                             </div>
-                            <span>Create an <strong>Outlook reminder</strong> 5 days before Dec 20"</span>
+                            <span className="group-hover:text-foreground transition-colors">Create an <strong>Outlook reminder</strong> 5 days before Dec 20"</span>
                           </li>
                         </ul>
                         <Button
