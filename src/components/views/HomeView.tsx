@@ -4,6 +4,7 @@ import { TaskCard } from "@/components/cards/TaskCard";
 import { ProjectCard } from "@/components/cards/ProjectCard";
 import { InsightsCard } from "@/components/cards/InsightsCard";
 import { MeetingOutcomesPanel } from "@/components/panels/MeetingOutcomesPanel";
+import { WidgetsSection } from "@/components/widgets/WidgetsSection";
 import { motion } from "framer-motion";
 import { ArrowRight, Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -119,6 +120,9 @@ export function HomeView({ onNavigateToProject }: HomeViewProps) {
             ))}
           </div>
         </motion.section>
+
+        {/* Widgets Section */}
+        <WidgetsSection />
 
         {/* Projects & Insights Grid */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
