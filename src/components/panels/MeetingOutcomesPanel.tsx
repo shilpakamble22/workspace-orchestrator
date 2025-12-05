@@ -512,16 +512,22 @@ export function MeetingOutcomesPanel({
                         </div>
                         <p className="text-muted-foreground mb-4">"I can:</p>
                         <ul className="space-y-3 text-sm">
-                          <li className="flex items-start gap-2">
-                            <Check className="h-4 w-4 text-primary mt-0.5 shrink-0" />
+                          <li className="flex items-center gap-3">
+                            <div className="h-5 w-5 rounded border-2 border-primary bg-primary flex items-center justify-center shrink-0">
+                              <Check className="h-3 w-3 text-primary-foreground" />
+                            </div>
                             <span>Flag this risk in the <strong>EMCPS Launch</strong> workspace</span>
                           </li>
-                          <li className="flex items-start gap-2">
-                            <Check className="h-4 w-4 text-primary mt-0.5 shrink-0" />
+                          <li className="flex items-center gap-3">
+                            <div className="h-5 w-5 rounded border-2 border-primary bg-primary flex items-center justify-center shrink-0">
+                              <Check className="h-3 w-3 text-primary-foreground" />
+                            </div>
                             <span>Draft a risk note for your next status update</span>
                           </li>
-                          <li className="flex items-start gap-2">
-                            <Check className="h-4 w-4 text-primary mt-0.5 shrink-0" />
+                          <li className="flex items-center gap-3">
+                            <div className="h-5 w-5 rounded border-2 border-primary bg-primary flex items-center justify-center shrink-0">
+                              <Check className="h-3 w-3 text-primary-foreground" />
+                            </div>
                             <span>Create an <strong>Outlook reminder</strong> 5 days before Dec 20"</span>
                           </li>
                         </ul>
