@@ -6,6 +6,7 @@ import { ProjectDirectoryView } from "@/components/views/ProjectDirectoryView";
 import { ProjectDetailView } from "@/components/views/ProjectDetailView";
 import { AgentsView } from "@/components/views/AgentsView";
 import { InsightsView } from "@/components/views/InsightsView";
+import SettingsView from "@/components/views/SettingsView";
 import { motion, AnimatePresence } from "framer-motion";
 
 const headerConfig: Record<string, { title: string; subtitle?: string }> = {
@@ -48,6 +49,8 @@ const Index = () => {
         return <AgentsView />;
       case "insights":
         return <InsightsView />;
+      case "settings":
+        return <SettingsView />;
       default:
         return (
           <div className="flex items-center justify-center h-[50vh] text-muted-foreground">
