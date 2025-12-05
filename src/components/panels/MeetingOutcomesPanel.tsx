@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { X, CheckCircle2, GitBranch, AlertTriangle, ArrowRight, ExternalLink, Calendar, Check, Clock, Users, Video, FileText, Link2 } from "lucide-react";
+import { X, CheckCircle2, GitBranch, AlertTriangle, ArrowRight, ExternalLink, Calendar, Check, Clock, Users, Video, FileText, Link2, Mail, Send } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -116,6 +116,7 @@ export function MeetingOutcomesPanel({ isOpen, onClose }: MeetingOutcomesPanelPr
   const [selectedActionId, setSelectedActionId] = useState<number | null>(null);
   const [showScheduleModal, setShowScheduleModal] = useState(false);
   const [showJiraModal, setShowJiraModal] = useState(false);
+  const [showEmailModal, setShowEmailModal] = useState(false);
   const [selectedTimeSlot, setSelectedTimeSlot] = useState<number | null>(null);
   
   // Jira form state
@@ -181,6 +182,28 @@ export function MeetingOutcomesPanel({ isOpen, onClose }: MeetingOutcomesPanelPr
       <div className="flex items-center justify-between gap-4">
         <span>Follow-up meeting created in Outlook</span>
         <button className="text-primary hover:underline text-sm font-medium">View event</button>
+      </div>
+    );
+  };
+
+  const handleDraftEmail = (action: typeof initialActions[0]) => {
+    setSelectedActionId(action.id);
+    setShowEmailModal(true);
+  };
+
+  const handleCreateOutlookDraft = () => {
+    if (!selectedActionId) return;
+    
+    setActions(prev => prev.map(a => 
+      a.id === selectedActionId ? { ...a, linked: "Outlook Draft" } : a
+    ));
+    setShowEmailModal(false);
+    setSelectedActionId(null);
+    
+    toast.success(
+      <div className="flex items-center justify-between gap-4">
+        <span>Email draft created in Outlook</span>
+        <button className="text-primary hover:underline text-sm font-medium">Open draft</button>
       </div>
     );
   };
@@ -289,7 +312,8 @@ export function MeetingOutcomesPanel({ isOpen, onClose }: MeetingOutcomesPanelPr
                                       className="gap-1.5"
                                       onClick={() => handleConfigureJira(action)}
                                     >
-                                      Configure
+                                      <FileText className="h-3 w-3" />
+                                      Create Jira Ticket
                                     </Button>
                                   )}
                                   {action.type === "meeting" && (
@@ -304,7 +328,13 @@ export function MeetingOutcomesPanel({ isOpen, onClose }: MeetingOutcomesPanelPr
                                     </Button>
                                   )}
                                   {action.type === "email" && (
-                                    <Button size="sm" variant="outline" className="gap-1.5">
+                                    <Button 
+                                      size="sm" 
+                                      variant="outline" 
+                                      className="gap-1.5"
+                                      onClick={() => handleDraftEmail(action)}
+                                    >
+                                      <Mail className="h-3 w-3" />
                                       Draft Email
                                     </Button>
                                   )}
@@ -615,6 +645,115 @@ export function MeetingOutcomesPanel({ isOpen, onClose }: MeetingOutcomesPanelPr
                 >
                   Create Jira Ticket
                   <ArrowRight className="h-4 w-4" />
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+
+          {/* Draft Email Modal */}
+          <Dialog open={showEmailModal} onOpenChange={setShowEmailModal}>
+            <DialogContent className="max-w-lg">
+              <DialogHeader>
+                <DialogTitle className="flex items-center gap-2">
+                  <Mail className="h-5 w-5 text-primary" />
+                  Draft Email
+                </DialogTitle>
+              </DialogHeader>
+
+              <div className="space-y-5 py-2">
+                {/* Recipients */}
+                <div className="space-y-3">
+                  <Label className="flex items-center gap-2">
+                    <Users className="h-4 w-4 text-muted-foreground" />
+                    To
+                  </Label>
+                  <div className="flex flex-wrap gap-2">
+                    <Badge variant="secondary" className="gap-1.5 py-1.5 px-3">
+                      SVP Engineering
+                      <span className="text-muted-foreground text-[10px]">(john.smith@oracle.com)</span>
+                      <button className="ml-1 hover:text-destructive">×</button>
+                    </Badge>
+                    <Badge variant="secondary" className="gap-1.5 py-1.5 px-3">
+                      Director of Product
+                      <span className="text-muted-foreground text-[10px]">(lisa.wong@oracle.com)</span>
+                      <button className="ml-1 hover:text-destructive">×</button>
+                    </Badge>
+                  </div>
+                  <Input placeholder="Add recipients..." className="text-sm" />
+                </div>
+
+                {/* CC */}
+                <div className="space-y-2">
+                  <Label className="flex items-center gap-2 text-muted-foreground">
+                    Cc
+                  </Label>
+                  <div className="flex flex-wrap gap-2">
+                    <Badge variant="muted" className="gap-1.5 py-1.5 px-3">
+                      EMCPS Program Team
+                      <button className="ml-1 hover:text-destructive">×</button>
+                    </Badge>
+                  </div>
+                </div>
+
+                {/* Subject */}
+                <div className="space-y-2">
+                  <Label>Subject</Label>
+                  <Input 
+                    defaultValue="EMCPS Launch Executive Summary – Jan 15 LA Target"
+                    className="font-medium"
+                  />
+                </div>
+
+                {/* Body */}
+                <div className="space-y-2">
+                  <Label className="flex items-center gap-2">
+                    <FileText className="h-4 w-4 text-muted-foreground" />
+                    Email Body (Draft)
+                  </Label>
+                  <Textarea 
+                    rows={8}
+                    defaultValue={`Hi Team,
+
+Following up from the EMCPS Launch Go/No-Go meeting held on December 5, 2024. Here's the executive summary for the upcoming LA launch:
+
+**Status**: On track for Jan 15 LA, pending performance sign-off by Dec 20
+
+**Key Decisions Made**:
+• Proceed with EMCPS LA target date of Jan 15
+• Initial geographies: US & EMEA only in Phase 1
+• Support team will handle first-line escalations
+
+**Action Items**:
+• Performance testing setup (Ankit Gupta) - Due Dec 20
+• Data governance FAQ finalization (Legal) - Due Dec 18
+
+**Risks & Mitigations**:
+• Performance testing timeline - Reminder set for Dec 15 status check
+
+Please review and let me know if you have any questions.
+
+Best regards,
+Priya Sharma`}
+                    className="text-sm"
+                  />
+                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                    <Link2 className="h-3 w-3" />
+                    <span>Context from: EMCPS Launch Go/No-Go meeting, Dec 5</span>
+                  </div>
+                </div>
+              </div>
+
+              <DialogFooter>
+                <Button variant="outline" onClick={() => setShowEmailModal(false)}>
+                  Cancel
+                </Button>
+                <Button 
+                  variant="glow" 
+                  className="gap-1.5"
+                  onClick={handleCreateOutlookDraft}
+                >
+                  <Send className="h-4 w-4" />
+                  Create Outlook Draft
                 </Button>
               </DialogFooter>
             </DialogContent>
