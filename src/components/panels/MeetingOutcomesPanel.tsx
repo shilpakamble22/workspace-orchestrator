@@ -58,26 +58,35 @@ const initialActions = [
   },
 ];
 
-const decisions = [
+const initialDecisions = [
   {
     id: 1,
-    title: "Proceed with EMCPS LA target date of Jan 15, pending performance sign-off by Dec 20",
+    title: "Proceed with EMCPS LA target date of Jan 15, pending performance sign-off by Dec 20.",
     source: "Zoom AIC",
-    date: "Today",
+    date: "December 5, 2024",
+    time: "9:15 AM PST",
+    participants: ["Priya Sharma", "Ankit Gupta", "Sarah Chen", "Michael Torres"],
+    conditionalNote: "pending performance sign-off",
     added: false,
   },
   {
     id: 2,
-    title: "Initial geographies for EMCPS LA: US & EMEA only in Phase 1",
+    title: "Initial geographies for EMCPS LA: US & EMEA only in Phase 1, with APAC rollout targeted for Q2.",
     source: "Zoom AIC",
-    date: "Today",
-    added: true,
+    date: "December 5, 2024",
+    time: "9:28 AM PST",
+    participants: ["Priya Sharma", "Ankit Gupta", "Sarah Chen", "Michael Torres"],
+    conditionalNote: "APAC rollout contingent on Phase 1 success metrics",
+    added: false,
   },
   {
     id: 3,
-    title: "Support team will handle first-line escalations for connector issues",
+    title: "Support team will handle first-line escalations for connector issues, with Dev Team as Tier 2.",
     source: "Zoom AIC",
-    date: "Today",
+    date: "December 5, 2024",
+    time: "9:42 AM PST",
+    participants: ["Priya Sharma", "Ankit Gupta", "Sarah Chen", "David Kim"],
+    conditionalNote: "escalation SLA of 4 hours",
     added: false,
   },
 ];
@@ -113,6 +122,7 @@ const meetingParticipants = [
 export function MeetingOutcomesPanel({ isOpen, onClose }: MeetingOutcomesPanelProps) {
   const [activeTab, setActiveTab] = useState<TabType>("actions");
   const [actions, setActions] = useState(initialActions);
+  const [decisions, setDecisions] = useState(initialDecisions);
   const [selectedActionId, setSelectedActionId] = useState<number | null>(null);
   const [showScheduleModal, setShowScheduleModal] = useState(false);
   const [showJiraModal, setShowJiraModal] = useState(false);
@@ -351,31 +361,104 @@ export function MeetingOutcomesPanel({ isOpen, onClose }: MeetingOutcomesPanelPr
 
               {activeTab === "decisions" && (
                 <div className="space-y-4">
-                  {decisions.map((decision) => (
-                    <motion.div
-                      key={decision.id}
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      className="rounded-lg border border-border bg-card p-4"
-                    >
-                      <p className="font-medium text-foreground">{decision.title}</p>
-                      <div className="mt-2 flex items-center gap-2 text-sm text-muted-foreground">
-                        <Badge variant="muted">{decision.source}</Badge>
-                        <span>·</span>
-                        <span>{decision.date}</span>
-                      </div>
-                      <div className="mt-3 flex items-center gap-2">
-                        <label className="flex items-center gap-2 text-sm cursor-pointer">
-                          <input
-                            type="checkbox"
-                            defaultChecked={decision.added}
-                            className="h-4 w-4 rounded border-muted-foreground"
-                          />
-                          <span className="text-muted-foreground">Add to EMCPS Launch Decision Log</span>
-                        </label>
-                      </div>
-                    </motion.div>
-                  ))}
+                  {decisions.map((decision) => {
+                    const handleToggle = () => {
+                      setDecisions(prev => prev.map(d => 
+                        d.id === decision.id ? { ...d, added: !d.added } : d
+                      ));
+                      if (!decision.added) {
+                        toast.success(
+                          <div className="flex items-center gap-2">
+                            <Check className="h-4 w-4 text-success" />
+                            <span>Decision added to EMCPS Launch Decision Log</span>
+                          </div>
+                        );
+                      }
+                    };
+
+                    return (
+                      <motion.div
+                        key={decision.id}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        layout
+                        className="rounded-lg border border-border bg-card p-4"
+                      >
+                        <div className="flex items-start gap-3">
+                          <div className={cn(
+                            "mt-1 h-5 w-5 rounded-full border-2 flex items-center justify-center shrink-0 transition-colors",
+                            decision.added ? "border-success bg-success" : "border-muted-foreground"
+                          )}>
+                            {decision.added && <Check className="h-3 w-3 text-success-foreground" />}
+                          </div>
+                          <div className="flex-1">
+                            <p className="font-medium text-foreground">{decision.title}</p>
+                            <div className="mt-2 flex items-center gap-2 text-sm text-muted-foreground">
+                              <Badge variant="muted" className="gap-1">
+                                <Video className="h-3 w-3" />
+                                {decision.source}
+                              </Badge>
+                              <span>·</span>
+                              <span>{decision.date}</span>
+                            </div>
+                            
+                            <div className="mt-3 flex items-center gap-2">
+                              <label className="flex items-center gap-2 text-sm cursor-pointer group">
+                                <div 
+                                  onClick={handleToggle}
+                                  className={cn(
+                                    "relative h-5 w-9 rounded-full transition-colors cursor-pointer",
+                                    decision.added ? "bg-primary" : "bg-muted"
+                                  )}
+                                >
+                                  <div className={cn(
+                                    "absolute top-0.5 h-4 w-4 rounded-full bg-white shadow transition-transform",
+                                    decision.added ? "translate-x-4" : "translate-x-0.5"
+                                  )} />
+                                </div>
+                                <span className="text-muted-foreground group-hover:text-foreground transition-colors">
+                                  Add to EMCPS Launch Decision Log
+                                </span>
+                              </label>
+                            </div>
+
+                            <AnimatePresence>
+                              {decision.added && (
+                                <motion.div
+                                  initial={{ opacity: 0, height: 0 }}
+                                  animate={{ opacity: 1, height: "auto" }}
+                                  exit={{ opacity: 0, height: 0 }}
+                                  className="overflow-hidden"
+                                >
+                                  <div className="mt-3 rounded-md bg-muted/50 p-3 space-y-2">
+                                    <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                                      <Clock className="h-3 w-3" />
+                                      <span>{decision.date} at {decision.time}</span>
+                                    </div>
+                                    <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                                      <Users className="h-3 w-3" />
+                                      <span>{decision.participants.join(", ")}</span>
+                                    </div>
+                                    <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                                      <FileText className="h-3 w-3" />
+                                      <span>Condition: {decision.conditionalNote}</span>
+                                    </div>
+                                    <div className="pt-1 border-t border-border/50 mt-2">
+                                      <p className="text-xs text-success flex items-center gap-1.5">
+                                        <Check className="h-3 w-3" />
+                                        Added to EMCPS Launch workspace · 
+                                        <button className="text-primary hover:underline">View in Decisions</button>
+                                      </p>
+                                    </div>
+                                  </div>
+                                </motion.div>
+                              )}
+                            </AnimatePresence>
+                          </div>
+                        </div>
+                      </motion.div>
+                    );
+                  })}
                 </div>
               )}
 
