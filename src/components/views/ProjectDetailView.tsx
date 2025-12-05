@@ -6,7 +6,7 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
 
-interface ProjectsViewProps {
+interface ProjectDetailViewProps {
   onBack: () => void;
 }
 
@@ -58,7 +58,7 @@ const projectDecisions = [
   },
 ];
 
-export function ProjectsView({ onBack }: ProjectsViewProps) {
+export function ProjectDetailView({ onBack }: ProjectDetailViewProps) {
   const [selectedTask, setSelectedTask] = useState<string | null>(null);
 
   return (

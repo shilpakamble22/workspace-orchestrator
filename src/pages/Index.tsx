@@ -2,14 +2,15 @@ import { useState } from "react";
 import { Sidebar } from "@/components/layout/Sidebar";
 import { Header } from "@/components/layout/Header";
 import { HomeView } from "@/components/views/HomeView";
-import { ProjectsView } from "@/components/views/ProjectsView";
+import { ProjectDirectoryView } from "@/components/views/ProjectDirectoryView";
+import { ProjectDetailView } from "@/components/views/ProjectDetailView";
 import { AgentsView } from "@/components/views/AgentsView";
 import { InsightsView } from "@/components/views/InsightsView";
 import { motion, AnimatePresence } from "framer-motion";
 
 const headerConfig: Record<string, { title: string; subtitle?: string }> = {
   home: { title: "Good morning, Priya", subtitle: "Thursday, December 5, 2024" },
-  projects: { title: "Projects", subtitle: "Manage your workspaces" },
+  projects: { title: "Projects", subtitle: "Manage and discover project workspaces" },
   agents: { title: "Agents", subtitle: "Build and manage AI workflows" },
   insights: { title: "Insights", subtitle: "Your productivity overview" },
   settings: { title: "Settings", subtitle: "Manage your preferences" },
@@ -17,28 +18,32 @@ const headerConfig: Record<string, { title: string; subtitle?: string }> = {
 
 const Index = () => {
   const [activeTab, setActiveTab] = useState("home");
-  const [showProjectDetail, setShowProjectDetail] = useState(false);
+  const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null);
 
   const currentHeader = headerConfig[activeTab] || headerConfig.home;
 
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
-    setShowProjectDetail(false);
+    setSelectedProjectId(null);
+  };
+
+  const handleSelectProject = (projectId: string) => {
+    setSelectedProjectId(projectId);
   };
 
   const renderView = () => {
-    if (activeTab === "projects" && showProjectDetail) {
-      return <ProjectsView onBack={() => setShowProjectDetail(false)} />;
+    if (activeTab === "projects" && selectedProjectId) {
+      return <ProjectDetailView onBack={() => setSelectedProjectId(null)} />;
     }
 
     switch (activeTab) {
       case "home":
         return <HomeView onNavigateToProject={() => {
           setActiveTab("projects");
-          setShowProjectDetail(true);
+          setSelectedProjectId("emcps-launch");
         }} />;
       case "projects":
-        return <HomeView onNavigateToProject={() => setShowProjectDetail(true)} />;
+        return <ProjectDirectoryView onSelectProject={handleSelectProject} />;
       case "agents":
         return <AgentsView />;
       case "insights":
@@ -52,20 +57,34 @@ const Index = () => {
     }
   };
 
+  const getHeaderTitle = () => {
+    if (activeTab === "projects" && selectedProjectId) {
+      return "EMCPS Launch";
+    }
+    return currentHeader.title;
+  };
+
+  const getHeaderSubtitle = () => {
+    if (activeTab === "projects" && selectedProjectId) {
+      return "Enterprise Multi-Cloud Platform Services";
+    }
+    return currentHeader.subtitle;
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <Sidebar activeTab={activeTab} onTabChange={handleTabChange} />
       
       <main className="pl-64">
         <Header 
-          title={showProjectDetail ? "EMCPS Launch" : currentHeader.title} 
-          subtitle={showProjectDetail ? "Enterprise Multi-Cloud Platform Services" : currentHeader.subtitle} 
+          title={getHeaderTitle()} 
+          subtitle={getHeaderSubtitle()} 
         />
         
         <div className="p-6">
           <AnimatePresence mode="wait">
             <motion.div
-              key={activeTab + (showProjectDetail ? "-detail" : "")}
+              key={activeTab + (selectedProjectId ? `-${selectedProjectId}` : "")}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
