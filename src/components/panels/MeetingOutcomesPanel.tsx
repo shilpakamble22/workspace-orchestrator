@@ -113,8 +113,9 @@ const meetingParticipants = [
 export function MeetingOutcomesPanel({ isOpen, onClose }: MeetingOutcomesPanelProps) {
   const [activeTab, setActiveTab] = useState<TabType>("actions");
   const [actions, setActions] = useState(initialActions);
-  const [expandedAction, setExpandedAction] = useState<number | null>(null);
+  const [selectedActionId, setSelectedActionId] = useState<number | null>(null);
   const [showScheduleModal, setShowScheduleModal] = useState(false);
+  const [showJiraModal, setShowJiraModal] = useState(false);
   const [selectedTimeSlot, setSelectedTimeSlot] = useState<number | null>(null);
   
   // Jira form state
@@ -127,7 +128,7 @@ export function MeetingOutcomesPanel({ isOpen, onClose }: MeetingOutcomesPanelPr
   });
 
   const handleConfigureJira = (action: typeof initialActions[0]) => {
-    setExpandedAction(action.id);
+    setSelectedActionId(action.id);
     setJiraForm({
       project: "EMCPS-Core",
       summary: action.title,
@@ -135,15 +136,19 @@ export function MeetingOutcomesPanel({ isOpen, onClose }: MeetingOutcomesPanelPr
       assignee: action.assignee,
       dueDate: addDays(new Date(), 14),
     });
+    setShowJiraModal(true);
   };
 
-  const handleCreateJiraTicket = (actionId: number) => {
+  const handleCreateJiraTicket = () => {
+    if (!selectedActionId) return;
+    
     const ticketId = `EMCPS-${2143 + Math.floor(Math.random() * 10)}`;
     
     setActions(prev => prev.map(a => 
-      a.id === actionId ? { ...a, linked: ticketId } : a
+      a.id === selectedActionId ? { ...a, linked: ticketId } : a
     ));
-    setExpandedAction(null);
+    setShowJiraModal(false);
+    setSelectedActionId(null);
     
     toast.success(
       <div className="flex items-center justify-between gap-4">
@@ -158,17 +163,19 @@ export function MeetingOutcomesPanel({ isOpen, onClose }: MeetingOutcomesPanelPr
   };
 
   const handleScheduleMeeting = (actionId: number) => {
-    setExpandedAction(actionId);
+    setSelectedActionId(actionId);
     setShowScheduleModal(true);
     setSelectedTimeSlot(null);
   };
 
-  const handleCreateOutlookEvent = (actionId: number) => {
+  const handleCreateOutlookEvent = () => {
+    if (!selectedActionId) return;
+    
     setActions(prev => prev.map(a => 
-      a.id === actionId ? { ...a, linked: "Outlook Event" } : a
+      a.id === selectedActionId ? { ...a, linked: "Outlook Event" } : a
     ));
     setShowScheduleModal(false);
-    setExpandedAction(null);
+    setSelectedActionId(null);
     
     toast.success(
       <div className="flex items-center justify-between gap-4">
@@ -241,7 +248,6 @@ export function MeetingOutcomesPanel({ isOpen, onClose }: MeetingOutcomesPanelPr
               {activeTab === "actions" && (
                 <div className="space-y-4">
                   {actions.map((action) => {
-                    const isExpanded = expandedAction === action.id;
                     const isCompleted = action.linked !== null;
                     
                     return (
@@ -251,8 +257,7 @@ export function MeetingOutcomesPanel({ isOpen, onClose }: MeetingOutcomesPanelPr
                         animate={{ opacity: 1, y: 0 }}
                         layout
                         className={cn(
-                          "rounded-lg border bg-card transition-all",
-                          isExpanded ? "border-primary/50" : "border-border",
+                          "rounded-lg border bg-card transition-all border-border",
                           isCompleted && "opacity-75"
                         )}
                       >
@@ -275,7 +280,7 @@ export function MeetingOutcomesPanel({ isOpen, onClose }: MeetingOutcomesPanelPr
                                   <ExternalLink className="h-3 w-3" />
                                   Linked: {action.type === "jira" ? `Jira ${action.linked}` : action.linked}
                                 </Badge>
-                              ) : !isExpanded && (
+                              ) : (
                                 <div className="mt-3 flex items-center gap-2">
                                   {action.type === "jira" && (
                                     <Button
@@ -308,118 +313,6 @@ export function MeetingOutcomesPanel({ isOpen, onClose }: MeetingOutcomesPanelPr
                             </div>
                           </div>
                         </div>
-
-                        {/* Inline Jira Form */}
-                        <AnimatePresence>
-                          {isExpanded && action.type === "jira" && (
-                            <motion.div
-                              initial={{ height: 0, opacity: 0 }}
-                              animate={{ height: "auto", opacity: 1 }}
-                              exit={{ height: 0, opacity: 0 }}
-                              transition={{ duration: 0.2 }}
-                              className="overflow-hidden"
-                            >
-                              <div className="border-t border-border bg-muted/30 p-4 space-y-4">
-                                <div className="flex items-center gap-2 text-sm font-medium text-foreground">
-                                  <FileText className="h-4 w-4 text-blue-500" />
-                                  Create Jira Ticket
-                                </div>
-
-                                <div className="grid grid-cols-2 gap-4">
-                                  <div className="space-y-2">
-                                    <Label>Project</Label>
-                                    <Select value={jiraForm.project} onValueChange={(v) => setJiraForm(f => ({ ...f, project: v }))}>
-                                      <SelectTrigger>
-                                        <SelectValue />
-                                      </SelectTrigger>
-                                      <SelectContent>
-                                        <SelectItem value="EMCPS-Core">EMCPS-Core</SelectItem>
-                                        <SelectItem value="EMCPS-Infra">EMCPS-Infra</SelectItem>
-                                        <SelectItem value="EMCPS-UI">EMCPS-UI</SelectItem>
-                                      </SelectContent>
-                                    </Select>
-                                  </div>
-
-                                  <div className="space-y-2">
-                                    <Label>Assignee</Label>
-                                    <Select value={jiraForm.assignee} onValueChange={(v) => setJiraForm(f => ({ ...f, assignee: v }))}>
-                                      <SelectTrigger>
-                                        <SelectValue />
-                                      </SelectTrigger>
-                                      <SelectContent>
-                                        <SelectItem value="Ankit Gupta">Ankit Gupta</SelectItem>
-                                        <SelectItem value="Priya Sharma">Priya Sharma</SelectItem>
-                                        <SelectItem value="Sarah Chen">Sarah Chen</SelectItem>
-                                        <SelectItem value="Dev Team">Dev Team</SelectItem>
-                                      </SelectContent>
-                                    </Select>
-                                  </div>
-                                </div>
-
-                                <div className="space-y-2">
-                                  <Label>Summary</Label>
-                                  <Input 
-                                    value={jiraForm.summary} 
-                                    onChange={(e) => setJiraForm(f => ({ ...f, summary: e.target.value }))}
-                                  />
-                                </div>
-
-                                <div className="space-y-2">
-                                  <Label>Description</Label>
-                                  <Textarea 
-                                    value={jiraForm.description} 
-                                    onChange={(e) => setJiraForm(f => ({ ...f, description: e.target.value }))}
-                                    rows={6}
-                                    className="text-sm font-mono"
-                                  />
-                                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                                    <Link2 className="h-3 w-3" />
-                                    <span>Includes: Meeting excerpt, date/time, attendees, Zoom summary link</span>
-                                  </div>
-                                </div>
-
-                                <div className="space-y-2">
-                                  <Label>Due Date</Label>
-                                  <Popover>
-                                    <PopoverTrigger asChild>
-                                      <Button variant="outline" className="w-full justify-start text-left font-normal">
-                                        <Calendar className="mr-2 h-4 w-4" />
-                                        {format(jiraForm.dueDate, "PPP")}
-                                      </Button>
-                                    </PopoverTrigger>
-                                    <PopoverContent className="w-auto p-0" align="start">
-                                      <CalendarComponent
-                                        mode="single"
-                                        selected={jiraForm.dueDate}
-                                        onSelect={(date) => date && setJiraForm(f => ({ ...f, dueDate: date }))}
-                                        initialFocus
-                                        className="pointer-events-auto"
-                                      />
-                                    </PopoverContent>
-                                  </Popover>
-                                  <p className="text-xs text-muted-foreground">Suggested: +14 days from today</p>
-                                </div>
-
-                                <div className="flex items-center gap-2 pt-2">
-                                  <Button 
-                                    className="gap-1.5" 
-                                    variant="glow"
-                                    onClick={() => handleCreateJiraTicket(action.id)}
-                                  >
-                                    Create Jira Ticket
-                                    <ArrowRight className="h-4 w-4" />
-                                  </Button>
-                                  <Button 
-                                    variant="ghost" 
-                                    onClick={() => setExpandedAction(null)}
-                                  >
-                                    Cancel
-                                  </Button>
-                                </div>
-                              </div>
-                            </motion.div>
-                          )}
-                        </AnimatePresence>
                       </motion.div>
                     );
                   })}
@@ -611,9 +504,116 @@ export function MeetingOutcomesPanel({ isOpen, onClose }: MeetingOutcomesPanelPr
                   variant="glow" 
                   className="gap-1.5"
                   disabled={!selectedTimeSlot}
-                  onClick={() => expandedAction && handleCreateOutlookEvent(expandedAction)}
+                  onClick={handleCreateOutlookEvent}
                 >
                   Create Outlook Event
+                  <ArrowRight className="h-4 w-4" />
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+
+          {/* Create Jira Ticket Modal */}
+          <Dialog open={showJiraModal} onOpenChange={setShowJiraModal}>
+            <DialogContent className="max-w-lg">
+              <DialogHeader>
+                <DialogTitle className="flex items-center gap-2">
+                  <FileText className="h-5 w-5 text-blue-500" />
+                  Create Jira Ticket
+                </DialogTitle>
+              </DialogHeader>
+
+              <div className="space-y-5 py-2">
+                {/* Project & Assignee */}
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label>Project</Label>
+                    <Select value={jiraForm.project} onValueChange={(v) => setJiraForm(f => ({ ...f, project: v }))}>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="EMCPS-Core">EMCPS-Core</SelectItem>
+                        <SelectItem value="EMCPS-Infra">EMCPS-Infra</SelectItem>
+                        <SelectItem value="EMCPS-UI">EMCPS-UI</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label>Assignee</Label>
+                    <Select value={jiraForm.assignee} onValueChange={(v) => setJiraForm(f => ({ ...f, assignee: v }))}>
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="Ankit Gupta">Ankit Gupta</SelectItem>
+                        <SelectItem value="Priya Sharma">Priya Sharma</SelectItem>
+                        <SelectItem value="Sarah Chen">Sarah Chen</SelectItem>
+                        <SelectItem value="Dev Team">Dev Team</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+
+                {/* Summary */}
+                <div className="space-y-2">
+                  <Label>Summary</Label>
+                  <Input 
+                    value={jiraForm.summary} 
+                    onChange={(e) => setJiraForm(f => ({ ...f, summary: e.target.value }))}
+                  />
+                </div>
+
+                {/* Description */}
+                <div className="space-y-2">
+                  <Label>Description</Label>
+                  <Textarea 
+                    value={jiraForm.description} 
+                    onChange={(e) => setJiraForm(f => ({ ...f, description: e.target.value }))}
+                    rows={6}
+                    className="text-sm"
+                  />
+                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                    <Link2 className="h-3 w-3" />
+                    <span>Includes: Meeting excerpt, date/time, attendees, Zoom summary link</span>
+                  </div>
+                </div>
+
+                {/* Due Date */}
+                <div className="space-y-2">
+                  <Label>Due Date</Label>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button variant="outline" className="w-full justify-start text-left font-normal">
+                        <Calendar className="mr-2 h-4 w-4" />
+                        {format(jiraForm.dueDate, "PPP")}
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <CalendarComponent
+                        mode="single"
+                        selected={jiraForm.dueDate}
+                        onSelect={(date) => date && setJiraForm(f => ({ ...f, dueDate: date }))}
+                        initialFocus
+                        className="pointer-events-auto"
+                      />
+                    </PopoverContent>
+                  </Popover>
+                  <p className="text-xs text-muted-foreground">Suggested: +14 days from today</p>
+                </div>
+              </div>
+
+              <DialogFooter>
+                <Button variant="outline" onClick={() => setShowJiraModal(false)}>
+                  Cancel
+                </Button>
+                <Button 
+                  variant="glow" 
+                  className="gap-1.5"
+                  onClick={handleCreateJiraTicket}
+                >
+                  Create Jira Ticket
                   <ArrowRight className="h-4 w-4" />
                 </Button>
               </DialogFooter>
