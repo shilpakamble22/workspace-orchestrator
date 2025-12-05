@@ -495,12 +495,7 @@ export function MeetingOutcomesPanel({
                       </div>
 
                       <div className="rounded-lg border border-primary/30 bg-primary/5 p-5">
-                        <div className="flex items-center gap-2 mb-4">
-                          <div className="h-8 w-8 rounded-full bg-primary/20 flex items-center justify-center">
-                            <span className="text-primary text-sm">AI</span>
-                          </div>
-                          <span className="font-medium text-foreground">AI Workspace suggestions</span>
-                        </div>
+                        <p className="font-medium text-foreground mb-4">AI Workspace suggestions</p>
                         <ul className="space-y-3 text-sm">
                           <li className="flex items-center gap-3 cursor-pointer group" onClick={() => setRiskOptions(prev => ({
                     ...prev,
