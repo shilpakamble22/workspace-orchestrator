@@ -495,7 +495,9 @@ export function MeetingOutcomesPanel({
                       </div>
 
                       <div className="rounded-lg border border-primary/30 bg-primary/5 p-5">
-                        <p className="font-medium text-foreground mb-4">AI Workspace suggestions</p>
+                        <Badge variant="default" className="mb-4 bg-gradient-to-r from-primary to-primary/80 text-primary-foreground px-3 py-1.5 text-sm font-medium shadow-md">
+                          ✨ AI Workspace suggestions
+                        </Badge>
                         <ul className="space-y-3 text-sm">
                           <li className="flex items-center gap-3 cursor-pointer group" onClick={() => setRiskOptions(prev => ({
                     ...prev,
