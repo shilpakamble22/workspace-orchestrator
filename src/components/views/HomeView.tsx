@@ -48,31 +48,42 @@ const tasks = [
   },
 ];
 
-const projects = [
-  {
-    name: "EMCPS Launch",
-    description: "Enterprise Multi-Cloud Platform Services launch program for Jan 15 LA target",
-    status: "at-risk" as const,
-    progress: 68,
-    tasksAtRisk: 2,
-    decisions: 5,
-    members: 12,
-    lastUpdated: "2 hours ago",
-  },
-  {
-    name: "Zoom AIC Rollout",
-    description: "Company-wide Zoom AI Companion adoption and integration program",
-    status: "on-track" as const,
-    progress: 82,
-    tasksAtRisk: 0,
-    decisions: 8,
-    members: 8,
-    lastUpdated: "1 day ago",
-  },
-];
-
 export function HomeView({ onNavigateToProject }: HomeViewProps) {
   const [isPanelOpen, setIsPanelOpen] = useState(false);
+  const [projectUpdates, setProjectUpdates] = useState({
+    emcpsLaunch: { decisions: 0, risks: 0 }
+  });
+
+  const handlePanelClose = () => {
+    setIsPanelOpen(false);
+    // Simulate updates after interacting with the panel
+    setProjectUpdates({ emcpsLaunch: { decisions: 1, risks: 1 } });
+  };
+
+  const projects = [
+    {
+      name: "EMCPS Launch",
+      description: "Enterprise Multi-Cloud Platform Services launch program for Jan 15 LA target",
+      status: "at-risk" as const,
+      progress: 68,
+      tasksAtRisk: 2,
+      decisions: 5,
+      members: 12,
+      lastUpdated: projectUpdates.emcpsLaunch.decisions > 0 ? "Just now" : "2 hours ago",
+      newDecisions: projectUpdates.emcpsLaunch.decisions,
+      newRisks: projectUpdates.emcpsLaunch.risks,
+    },
+    {
+      name: "Zoom AIC Rollout",
+      description: "Company-wide Zoom AI Companion adoption and integration program",
+      status: "on-track" as const,
+      progress: 82,
+      tasksAtRisk: 0,
+      decisions: 8,
+      members: 8,
+      lastUpdated: "1 day ago",
+    },
+  ];
 
   return (
     <>
@@ -143,7 +154,7 @@ export function HomeView({ onNavigateToProject }: HomeViewProps) {
         </div>
       </div>
 
-      <MeetingOutcomesPanel isOpen={isPanelOpen} onClose={() => setIsPanelOpen(false)} />
+      <MeetingOutcomesPanel isOpen={isPanelOpen} onClose={handlePanelClose} />
     </>
   );
 }

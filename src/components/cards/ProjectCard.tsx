@@ -1,4 +1,4 @@
-import { ArrowRight, CheckCircle2, AlertTriangle, Calendar, Users } from "lucide-react";
+import { ArrowRight, CheckCircle2, AlertTriangle, Calendar, Users, GitBranch, Sparkles } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
@@ -12,6 +12,8 @@ interface ProjectCardProps {
   decisions: number;
   members: number;
   lastUpdated: string;
+  newDecisions?: number;
+  newRisks?: number;
   onClick: () => void;
 }
 
@@ -30,9 +32,12 @@ export function ProjectCard({
   decisions,
   members,
   lastUpdated,
+  newDecisions = 0,
+  newRisks = 0,
   onClick,
 }: ProjectCardProps) {
   const statusInfo = statusConfig[status];
+  const hasUpdates = newDecisions > 0 || newRisks > 0;
 
   return (
     <motion.div
@@ -53,6 +58,20 @@ export function ProjectCard({
         </div>
         <ArrowRight className="h-5 w-5 text-muted-foreground opacity-0 transition-all group-hover:opacity-100 group-hover:translate-x-1" />
       </div>
+
+      {/* New updates indicator */}
+      {hasUpdates && (
+        <motion.div
+          initial={{ opacity: 0, y: -10 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mt-3 flex items-center gap-2 rounded-md bg-primary/10 px-3 py-2"
+        >
+          <Sparkles className="h-3.5 w-3.5 text-primary" />
+          <span className="text-xs text-primary font-medium">
+            Updated · {newDecisions > 0 && `${newDecisions} new decision`}{newDecisions > 0 && newRisks > 0 && " · "}{newRisks > 0 && `${newRisks} new risk`}
+          </span>
+        </motion.div>
+      )}
 
       {/* Progress bar */}
       <div className="mt-4">
