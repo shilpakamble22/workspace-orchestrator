@@ -4,6 +4,7 @@ import { Bot, Plus, Play, Settings, Users, Zap, ChevronRight, CheckCircle2, Cloc
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { CreateAgentModal } from "@/components/agents/CreateAgentModal";
 
 const myAgents = [
   {
@@ -67,6 +68,7 @@ const galleryAgents = [
 
 export function AgentsView() {
   const [selectedAgent, setSelectedAgent] = useState<number | null>(null);
+  const [createModalOpen, setCreateModalOpen] = useState(false);
 
   return (
     <div className="space-y-8">
@@ -80,11 +82,13 @@ export function AgentsView() {
           <h1 className="text-2xl font-bold text-foreground">Agents</h1>
           <p className="text-sm text-muted-foreground">Build and manage AI-powered workflows</p>
         </div>
-        <Button className="gap-2" variant="glow">
+        <Button className="gap-2" variant="glow" onClick={() => setCreateModalOpen(true)}>
           <Plus className="h-4 w-4" />
           Create Agent
         </Button>
       </motion.div>
+
+      <CreateAgentModal open={createModalOpen} onOpenChange={setCreateModalOpen} />
 
       {/* My Agents */}
       <motion.section
