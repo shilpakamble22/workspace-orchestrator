@@ -5,17 +5,14 @@ import { WidgetTile } from "./WidgetTile";
 import { AddWidgetDialog } from "./AddWidgetDialog";
 import { MeetingPrepModal } from "./MeetingPrepModal";
 import { SlackCatchUpModal } from "./SlackCatchUpModal";
-
 export function WidgetsSection() {
   const [addWidgetOpen, setAddWidgetOpen] = useState(false);
   const [meetingPrepOpen, setMeetingPrepOpen] = useState(false);
   const [slackCatchUpOpen, setSlackCatchUpOpen] = useState(false);
-  
   const handleSelectWidget = (widgetId: string) => {
     console.log("Selected widget:", widgetId);
     // Handle widget addition logic here
   };
-  
   return <motion.section initial={{
     opacity: 0,
     y: 20
@@ -27,7 +24,7 @@ export function WidgetsSection() {
     delay: 0.35
   }}>
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-lg font-semibold text-foreground">My Widgets</h2>
+        <h2 className="text-lg font-semibold text-foreground">My Agents</h2>
       </div>
       
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
