@@ -9,14 +9,12 @@ interface SidebarProps {
 
 const navItems = [
   { id: "home", label: "Home", icon: Home },
-  { id: "projects", label: "My Workspaces", icon: FolderKanban },
+  { id: "projects", label: "Workspaces", icon: FolderKanban },
   { id: "agents", label: "Agents", icon: Bot },
   { id: "insights", label: "Insights", icon: BarChart3 },
 ];
 
-const bottomItems = [
-  { id: "settings", label: "Settings", icon: Settings },
-];
+const bottomItems = [{ id: "settings", label: "Settings", icon: Settings }];
 
 export function Sidebar({ activeTab, onTabChange }: SidebarProps) {
   return (
@@ -60,16 +58,13 @@ export function Sidebar({ activeTab, onTabChange }: SidebarProps) {
                     "flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200",
                     isActive
                       ? "bg-sidebar-accent text-sidebar-accent-foreground"
-                      : "text-sidebar-foreground hover:bg-sidebar-accent/50 hover:text-sidebar-accent-foreground"
+                      : "text-sidebar-foreground hover:bg-sidebar-accent/50 hover:text-sidebar-accent-foreground",
                   )}
                 >
                   <Icon className={cn("h-4 w-4", isActive && "text-primary")} />
                   <span>{item.label}</span>
                   {isActive && (
-                    <motion.div
-                      layoutId="activeIndicator"
-                      className="ml-auto h-1.5 w-1.5 rounded-full bg-primary"
-                    />
+                    <motion.div layoutId="activeIndicator" className="ml-auto h-1.5 w-1.5 rounded-full bg-primary" />
                   )}
                 </button>
               </li>
@@ -92,16 +87,12 @@ export function Sidebar({ activeTab, onTabChange }: SidebarProps) {
                     "flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-all duration-200",
                     isActive
                       ? "bg-sidebar-accent text-sidebar-accent-foreground"
-                      : "text-sidebar-foreground hover:bg-sidebar-accent/50 hover:text-sidebar-accent-foreground"
+                      : "text-sidebar-foreground hover:bg-sidebar-accent/50 hover:text-sidebar-accent-foreground",
                   )}
                 >
                   <Icon className={cn("h-4 w-4", isActive && "text-primary")} />
                   <span>{item.label}</span>
-                  {isActive && (
-                    <motion.div
-                      className="ml-auto h-1.5 w-1.5 rounded-full bg-primary"
-                    />
-                  )}
+                  {isActive && <motion.div className="ml-auto h-1.5 w-1.5 rounded-full bg-primary" />}
                 </button>
               </li>
             );
