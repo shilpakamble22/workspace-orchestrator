@@ -1,8 +1,9 @@
+import { useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { AlertTriangle, MessageSquare, Ticket, FileText, CheckSquare, ArrowLeft } from "lucide-react";
+import { AlertTriangle, MessageSquare, Ticket, FileText, CheckSquare, ArrowLeft, RefreshCw, Zap, Users, Clock, ExternalLink } from "lucide-react";
 import { motion } from "framer-motion";
 
 interface IncidentWorkspaceViewProps {
@@ -10,11 +11,45 @@ interface IncidentWorkspaceViewProps {
 }
 
 export function IncidentWorkspaceView({ onBack }: IncidentWorkspaceViewProps) {
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  
   const today = new Date().toLocaleDateString('en-US', { 
     month: 'short', 
     day: 'numeric', 
     year: 'numeric' 
   });
+
+  const handleRefreshSummary = () => {
+    setIsRefreshing(true);
+    setTimeout(() => setIsRefreshing(false), 1500);
+  };
+
+  const recommendedActions = [
+    {
+      title: "Page on-call SRE",
+      description: "Alert the SRE team for immediate investigation",
+      icon: Users,
+      priority: "high"
+    },
+    {
+      title: "Scale up connector pods",
+      description: "Increase replicas from 3 to 6 in US-West region",
+      icon: Zap,
+      priority: "high"
+    },
+    {
+      title: "Enable verbose logging",
+      description: "Turn on debug logs for EMCPS connector service",
+      icon: FileText,
+      priority: "medium"
+    },
+    {
+      title: "Notify affected customers",
+      description: "Send status update to enterprise customers",
+      icon: MessageSquare,
+      priority: "medium"
+    }
+  ];
 
   return (
     <div className="space-y-6">
@@ -62,15 +97,26 @@ export function IncidentWorkspaceView({ onBack }: IncidentWorkspaceViewProps) {
           </TabsTrigger>
         </TabsList>
 
-        <TabsContent value="summary" className="mt-6">
+        <TabsContent value="summary" className="mt-6 space-y-6">
+          {/* Incident Summary Card */}
           <motion.div
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3 }}
           >
             <Card className="bg-card/50 border-border/50">
-              <CardHeader>
+              <CardHeader className="flex flex-row items-center justify-between">
                 <CardTitle className="text-lg">Incident Summary</CardTitle>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="gap-2"
+                  onClick={handleRefreshSummary}
+                  disabled={isRefreshing}
+                >
+                  <RefreshCw className={`h-4 w-4 ${isRefreshing ? 'animate-spin' : ''}`} />
+                  {isRefreshing ? 'Refreshing...' : 'Refresh Summary'}
+                </Button>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
@@ -98,6 +144,52 @@ export function IncidentWorkspaceView({ onBack }: IncidentWorkspaceViewProps) {
                     increased from 200ms to 1.2s. Affecting enterprise customers in US-West region.
                   </p>
                 </div>
+                <div className="flex items-center gap-2 pt-2 text-xs text-muted-foreground">
+                  <Clock className="h-3 w-3" />
+                  <span>Last updated 5 minutes ago</span>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+
+          {/* Recommended Actions Card */}
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: 0.1 }}
+          >
+            <Card className="bg-card/50 border-border/50">
+              <CardHeader>
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <Zap className="h-5 w-5 text-primary" />
+                  Recommended Actions
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                {recommendedActions.map((action, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, x: -10 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.2, delay: 0.1 + index * 0.05 }}
+                    className="flex items-center gap-4 p-3 rounded-lg bg-background/50 border border-border/30 hover:border-primary/30 transition-colors group cursor-pointer"
+                  >
+                    <div className={`p-2 rounded-lg ${action.priority === 'high' ? 'bg-destructive/20 text-destructive' : 'bg-primary/20 text-primary'}`}>
+                      <action.icon className="h-4 w-4" />
+                    </div>
+                    <div className="flex-1">
+                      <p className="font-medium text-foreground">{action.title}</p>
+                      <p className="text-sm text-muted-foreground">{action.description}</p>
+                    </div>
+                    <Badge 
+                      variant={action.priority === 'high' ? 'destructive' : 'secondary'}
+                      className="shrink-0"
+                    >
+                      {action.priority === 'high' ? 'High Priority' : 'Medium'}
+                    </Badge>
+                    <ExternalLink className="h-4 w-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
+                  </motion.div>
+                ))}
               </CardContent>
             </Card>
           </motion.div>
