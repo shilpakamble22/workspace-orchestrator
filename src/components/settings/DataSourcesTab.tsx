@@ -37,7 +37,7 @@ const DataSourcesTab = () => {
     },
     {
       id: "outlook",
-      name: "Outlook / Email",
+      name: "Outlook",
       icon: <Mail className="h-5 w-5" />,
       connected: true,
       lastSync: "5 minutes ago",
