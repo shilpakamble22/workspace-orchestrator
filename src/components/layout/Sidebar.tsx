@@ -9,7 +9,7 @@ interface SidebarProps {
 
 const navItems = [
   { id: "home", label: "Home", icon: Home },
-  { id: "projects", label: "Projects", icon: FolderKanban },
+  { id: "projects", label: "My Workspaces", icon: FolderKanban },
   { id: "agents", label: "Agents", icon: Bot },
   { id: "insights", label: "Insights", icon: BarChart3 },
 ];
