@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Sidebar } from "@/components/layout/Sidebar";
 import { Header } from "@/components/layout/Header";
 import { HomeView } from "@/components/views/HomeView";
@@ -9,9 +9,15 @@ import { InsightsView } from "@/components/views/InsightsView";
 import { IncidentWorkspaceView } from "@/components/views/IncidentWorkspaceView";
 import SettingsView from "@/components/views/SettingsView";
 import { motion, AnimatePresence } from "framer-motion";
+import { format } from "date-fns";
+
+const getGreeting = (hour: number) => {
+  if (hour < 12) return "Good morning";
+  if (hour < 17) return "Good afternoon";
+  return "Good evening";
+};
 
 const headerConfig: Record<string, { title: string; subtitle?: string }> = {
-  home: { title: "Good morning, Priya", subtitle: "Thursday, December 5, 2024 12:00 PM" },
   projects: { title: "Projects", subtitle: "Manage and discover project workspaces" },
   agents: { title: "Agents", subtitle: "Build and manage AI workflows" },
   insights: { title: "Insights", subtitle: "Your productivity overview" },
@@ -22,8 +28,16 @@ const Index = () => {
   const [activeTab, setActiveTab] = useState("home");
   const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null);
   const [showIncidentWorkspace, setShowIncidentWorkspace] = useState(false);
+  const [currentTime, setCurrentTime] = useState(new Date());
 
-  const currentHeader = headerConfig[activeTab] || headerConfig.home;
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  const currentHeader = headerConfig[activeTab];
 
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
@@ -76,7 +90,10 @@ const Index = () => {
     if (activeTab === "projects" && selectedProjectId) {
       return "EMCPS Launch";
     }
-    return currentHeader.title;
+    if (activeTab === "home") {
+      return `${getGreeting(currentTime.getHours())}, Priya`;
+    }
+    return currentHeader?.title || "Home";
   };
 
   const getHeaderSubtitle = () => {
@@ -86,7 +103,10 @@ const Index = () => {
     if (activeTab === "projects" && selectedProjectId) {
       return "Enterprise Multi-Cloud Platform Services";
     }
-    return currentHeader.subtitle;
+    if (activeTab === "home") {
+      return format(currentTime, "EEEE, MMMM d, yyyy h:mm:ss a");
+    }
+    return currentHeader?.subtitle;
   };
 
   return (
