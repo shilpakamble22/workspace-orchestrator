@@ -9,6 +9,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSepara
 import { cn } from "@/lib/utils";
 interface ProjectDirectoryViewProps {
   onSelectProject: (projectId: string) => void;
+  onOpenIncidentWorkspace?: () => void;
 }
 type ViewMode = "grid" | "list";
 type FilterScope = "my-projects" | "my-team" | "all";
@@ -143,7 +144,8 @@ const portfolioViews = [{
   count: 4
 }];
 export function ProjectDirectoryView({
-  onSelectProject
+  onSelectProject,
+  onOpenIncidentWorkspace
 }: ProjectDirectoryViewProps) {
   const [viewMode, setViewMode] = useState<ViewMode>("grid");
   const [filterScope, setFilterScope] = useState<FilterScope>("my-projects");
@@ -307,7 +309,13 @@ export function ProjectDirectoryView({
       }} exit={{
         opacity: 0
       }} className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-            {sortedProjects.map((project, index) => <ProjectGridCard key={project.id} project={project} index={index} onClick={() => onSelectProject(project.id)} />)}
+            {sortedProjects.map((project, index) => <ProjectGridCard key={project.id} project={project} index={index} onClick={() => {
+              if (project.id === "incident-latency") {
+                onOpenIncidentWorkspace?.();
+              } else {
+                onSelectProject(project.id);
+              }
+            }} />)}
           </motion.div> : <motion.div key="list" initial={{
         opacity: 0
       }} animate={{
@@ -315,7 +323,13 @@ export function ProjectDirectoryView({
       }} exit={{
         opacity: 0
       }} className="space-y-2">
-            {sortedProjects.map((project, index) => <ProjectListRow key={project.id} project={project} index={index} onClick={() => onSelectProject(project.id)} />)}
+            {sortedProjects.map((project, index) => <ProjectListRow key={project.id} project={project} index={index} onClick={() => {
+              if (project.id === "incident-latency") {
+                onOpenIncidentWorkspace?.();
+              } else {
+                onSelectProject(project.id);
+              }
+            }} />)}
           </motion.div>}
       </AnimatePresence>
 

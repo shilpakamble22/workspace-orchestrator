@@ -53,7 +53,7 @@ const Index = () => {
           onCreateIncidentWorkspace={() => setShowIncidentWorkspace(true)}
         />;
       case "projects":
-        return <ProjectDirectoryView onSelectProject={handleSelectProject} />;
+        return <ProjectDirectoryView onSelectProject={handleSelectProject} onOpenIncidentWorkspace={() => setShowIncidentWorkspace(true)} />;
       case "agents":
         return <AgentsView />;
       case "insights":

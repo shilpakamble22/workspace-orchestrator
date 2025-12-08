@@ -62,6 +62,7 @@ export function HomeView({
     });
   };
   const projects = [{
+    id: "emcps-launch",
     name: "EMCPS Launch",
     description: "Enterprise Multi-Cloud Platform Services launch program for Jan 15 LA target",
     status: "at-risk" as const,
@@ -73,6 +74,7 @@ export function HomeView({
     newDecisions: projectUpdates.emcpsLaunch.decisions,
     newRisks: projectUpdates.emcpsLaunch.risks
   }, {
+    id: "zoom-aic-rollout",
     name: "Zoom AIC Rollout",
     description: "Company-wide Zoom AI Companion adoption and integration program",
     status: "on-track" as const,
@@ -82,6 +84,7 @@ export function HomeView({
     members: 8,
     lastUpdated: "1 day ago"
   }, {
+    id: "incident-latency",
     name: "EMCPS Latency Incident",
     description: "Critical latency spike investigation and resolution for EMCPS connectors",
     status: "at-risk" as const,
@@ -91,6 +94,14 @@ export function HomeView({
     members: 6,
     lastUpdated: "30 min ago"
   }];
+
+  const handleProjectClick = (projectId: string) => {
+    if (projectId === "incident-latency") {
+      onCreateIncidentWorkspace?.();
+    } else {
+      onNavigateToProject();
+    }
+  };
   return <>
       <div className="space-y-6">
         {/* Incident Alert Banner */}
@@ -233,7 +244,7 @@ export function HomeView({
             </Button>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {projects.map((project, index) => <ProjectCard key={index} {...project} onClick={onNavigateToProject} />)}
+            {projects.map((project, index) => <ProjectCard key={index} {...project} onClick={() => handleProjectClick(project.id)} />)}
           </div>
         </motion.section>
       </div>
