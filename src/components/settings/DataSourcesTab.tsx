@@ -61,7 +61,7 @@ const DataSourcesTab = () => {
     },
     {
       id: "jira",
-      name: "Jira / Work Management",
+      name: "Jira",
       icon: <CheckSquare className="h-5 w-5" />,
       connected: true,
       lastSync: "3 minutes ago",
