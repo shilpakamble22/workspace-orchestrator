@@ -9,15 +9,8 @@ import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { motion } from "framer-motion";
 import { 
-  Sun, 
-  Calendar, 
-  Mail, 
   MessageSquare, 
-  History,
   Hash,
-  ChevronLeft,
-  ChevronRight,
-  ExternalLink
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -25,14 +18,6 @@ interface SlackCatchUpModalProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
-
-const quickActions = [
-  { id: "summarize", icon: Sun, label: "Summarize My Day" },
-  { id: "plan", icon: Calendar, label: "Plan My Week" },
-  { id: "inbox", icon: Mail, label: "Review My Inbox" },
-  { id: "slack", icon: MessageSquare, label: "Catch Me Up on Slack" },
-  { id: "recap", icon: History, label: "Recap" },
-];
 
 const channelSummaries = [
   { 
@@ -55,52 +40,19 @@ const directMessages = [
 ];
 
 export function SlackCatchUpModal({ open, onOpenChange }: SlackCatchUpModalProps) {
-  const [selectedAction, setSelectedAction] = useState("slack");
   const [notifyWhenDone, setNotifyWhenDone] = useState(true);
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[700px] bg-card border-border max-h-[85vh] overflow-y-auto">
         <DialogHeader className="pb-4">
-          <DialogTitle className="sr-only">Quick Actions</DialogTitle>
-          
-          {/* Quick Action Tabs */}
-          <div className="relative">
-            <div className="flex items-center gap-2">
-              <button className="p-1 text-muted-foreground hover:text-foreground transition-colors">
-                <ChevronLeft className="h-4 w-4" />
-              </button>
-              
-              <div className="flex gap-3 overflow-x-auto flex-1 pb-2">
-                {quickActions.map((action) => (
-                  <button
-                    key={action.id}
-                    onClick={() => setSelectedAction(action.id)}
-                    className={cn(
-                      "flex flex-col items-center gap-2 p-4 min-w-[120px] rounded-lg border transition-all shrink-0",
-                      selectedAction === action.id
-                        ? "border-primary bg-primary/5"
-                        : "border-border bg-background hover:border-primary/30"
-                    )}
-                  >
-                    <action.icon className={cn(
-                      "h-5 w-5",
-                      selectedAction === action.id ? "text-primary" : "text-muted-foreground"
-                    )} />
-                    <span className={cn(
-                      "text-xs font-medium text-center",
-                      selectedAction === action.id ? "text-foreground" : "text-muted-foreground"
-                    )}>
-                      {action.label}
-                    </span>
-                  </button>
-                ))}
-              </div>
-              
-              <button className="p-1 text-muted-foreground hover:text-foreground transition-colors">
-                <ChevronRight className="h-4 w-4" />
-              </button>
+          <div className="flex items-center gap-3">
+            <div className="p-2 rounded-lg bg-primary/10">
+              <MessageSquare className="h-5 w-5 text-primary" />
             </div>
+            <DialogTitle className="text-xl font-semibold text-foreground">
+              Catch Me Up on Slack
+            </DialogTitle>
           </div>
         </DialogHeader>
 
