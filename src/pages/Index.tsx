@@ -11,7 +11,7 @@ import SettingsView from "@/components/views/SettingsView";
 import { motion, AnimatePresence } from "framer-motion";
 
 const headerConfig: Record<string, { title: string; subtitle?: string }> = {
-  home: { title: "Good morning, Priya", subtitle: "Thursday, December 5, 2024" },
+  home: { title: "Good morning, Priya", subtitle: "Thursday, December 5, 2024 12:00 PM" },
   projects: { title: "Projects", subtitle: "Manage and discover project workspaces" },
   agents: { title: "Agents", subtitle: "Build and manage AI workflows" },
   insights: { title: "Insights", subtitle: "Your productivity overview" },
