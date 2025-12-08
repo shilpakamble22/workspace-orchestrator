@@ -54,9 +54,9 @@ const initialActions = [{
   linked: "EMCPS-2141"
 }, {
   id: 4,
-  title: "Prepare executive summary for LA launch",
+  title: "Update FAQ for EMCPS LA with new information – Available only to EES organization",
   assignee: "Priya Sharma",
-  type: "email" as const,
+  type: "confluence" as const,
   linked: null as string | null
 }];
 const initialDecisions = [{
@@ -148,6 +148,7 @@ export function MeetingOutcomesPanel({
   const [showScheduleModal, setShowScheduleModal] = useState(false);
   const [showJiraModal, setShowJiraModal] = useState(false);
   const [showEmailModal, setShowEmailModal] = useState(false);
+  const [showConfluenceModal, setShowConfluenceModal] = useState(false);
   const [selectedTimeSlot, setSelectedTimeSlot] = useState<number | null>(null);
 
   // Risk flow state
@@ -234,6 +235,23 @@ export function MeetingOutcomesPanel({
         <button className="text-primary hover:underline text-sm font-medium">Open draft</button>
       </div>);
   };
+  const handleOpenConfluence = (action: typeof initialActions[0]) => {
+    setSelectedActionId(action.id);
+    setShowConfluenceModal(true);
+  };
+  const handleUpdateConfluencePage = () => {
+    if (!selectedActionId) return;
+    setActions(prev => prev.map(a => a.id === selectedActionId ? {
+      ...a,
+      linked: "Confluence Page"
+    } : a));
+    setShowConfluenceModal(false);
+    setSelectedActionId(null);
+    toast.success(<div className="flex items-center justify-between gap-4">
+        <span>Confluence page updated</span>
+        <button className="text-primary hover:underline text-sm font-medium">View page</button>
+      </div>);
+  };
   return <AnimatePresence>
       {isOpen && <>
           {/* Backdrop */}
@@ -318,9 +336,9 @@ export function MeetingOutcomesPanel({
                                       <Calendar className="h-3 w-3" />
                                       Schedule Meeting
                                     </Button>}
-                                  {action.type === "email" && <Button size="sm" variant="outline" className="gap-1.5" onClick={() => handleDraftEmail(action)}>
-                                      <Mail className="h-3 w-3" />
-                                      Draft Email
+                                  {action.type === "confluence" && <Button size="sm" variant="outline" className="gap-1.5" onClick={() => handleOpenConfluence(action)}>
+                                      <FileText className="h-3 w-3" />
+                                      Update Confluence Page
                                     </Button>}
                                 </div>}
                             </div>
@@ -938,6 +956,63 @@ Priya Sharma`} className="text-sm" />
                 <Button variant="glow" className="gap-1.5" onClick={handleCreateOutlookDraft}>
                   <Send className="h-4 w-4" />
                   Create Outlook Draft
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+
+          {/* Confluence Modal */}
+          <Dialog open={showConfluenceModal} onOpenChange={setShowConfluenceModal}>
+            <DialogContent className="max-w-lg">
+              <DialogHeader>
+                <DialogTitle className="flex items-center gap-2">
+                  <FileText className="h-5 w-5 text-info" />
+                  Update Confluence Page
+                </DialogTitle>
+              </DialogHeader>
+
+              <div className="space-y-4">
+                <div className="rounded-lg border border-border bg-muted/30 p-4">
+                  <div className="flex items-center gap-2 mb-3">
+                    <Badge variant="info">EMCPS FAQ</Badge>
+                    <Badge variant="muted">EES Organization Only</Badge>
+                  </div>
+                  <p className="text-sm font-medium text-foreground mb-2">
+                    Update FAQ for EMCPS LA with new information
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    This page will be updated with the latest information from the Go/No-Go Checkpoint meeting.
+                  </p>
+                </div>
+
+                <div className="space-y-3">
+                  <Label>Content to Add</Label>
+                  <Textarea 
+                    className="min-h-[120px] text-sm"
+                    defaultValue={`**Meeting Updates (Dec 5, 2024)**
+
+• LA target date confirmed: Jan 15, 2025
+• Initial geographies: US & EMEA only in Phase 1
+• APAC rollout targeted for Q2
+• Support escalation path: Support Team (Tier 1) → Dev Team (Tier 2)
+
+**Access**: Available only to EES organization members`}
+                  />
+                </div>
+
+                <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                  <Link2 className="h-3 w-3" />
+                  <span>Linked to: EMCPS Launch Go/No-Go Checkpoint meeting</span>
+                </div>
+              </div>
+
+              <DialogFooter>
+                <Button variant="outline" onClick={() => setShowConfluenceModal(false)}>
+                  Cancel
+                </Button>
+                <Button variant="glow" className="gap-1.5" onClick={handleUpdateConfluencePage}>
+                  <FileText className="h-4 w-4" />
+                  Update Page
                 </Button>
               </DialogFooter>
             </DialogContent>
