@@ -7,10 +7,12 @@ import { MeetingOutcomesPanel } from "@/components/panels/MeetingOutcomesPanel";
 import { WidgetsSection } from "@/components/widgets/WidgetsSection";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { motion } from "framer-motion";
-import { ArrowRight, Plus, ChevronDown, Info } from "lucide-react";
+import { ArrowRight, Plus, ChevronDown, AlertTriangle, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+
 interface HomeViewProps {
   onNavigateToProject: () => void;
+  onCreateIncidentWorkspace?: () => void;
 }
 const tasks = [{
   title: "Set up performance testing for EMCPS connectors",
@@ -36,12 +38,14 @@ const tasks = [{
   priority: "medium" as const
 }];
 export function HomeView({
-  onNavigateToProject
+  onNavigateToProject,
+  onCreateIncidentWorkspace
 }: HomeViewProps) {
   const [isPanelOpen, setIsPanelOpen] = useState(false);
   const [meetingsOpen, setMeetingsOpen] = useState(true);
   const [tasksOpen, setTasksOpen] = useState(true);
   const [insightsOpen, setInsightsOpen] = useState(true);
+  const [showIncidentBanner, setShowIncidentBanner] = useState(true);
   const [projectUpdates, setProjectUpdates] = useState({
     emcpsLaunch: {
       decisions: 0,
@@ -80,11 +84,54 @@ export function HomeView({
   }];
   return <>
       <div className="space-y-6">
-        {/* Notification Banner */}
-        <div className="flex items-center gap-2 rounded-lg border border-info/30 bg-info/10 px-4 py-2.5 text-sm">
-          <Info className="h-4 w-4 text-info" />
-          <span className="text-muted-foreground">This is a placeholder</span>
-        </div>
+        {/* Incident Alert Banner */}
+        {showIncidentBanner && (
+          <motion.div 
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="rounded-lg border border-destructive/30 bg-destructive/10 px-4 py-3"
+          >
+            <div className="flex items-start justify-between gap-4">
+              <div className="flex items-start gap-3">
+                <AlertTriangle className="h-5 w-5 text-destructive mt-0.5" />
+                <div className="space-y-1.5">
+                  <p className="font-medium text-foreground">New potential incident: EMCPS latency spike</p>
+                  <div className="text-sm text-muted-foreground space-y-0.5">
+                    <p>• Slack: <span className="text-primary">#incident-emcps-latency</span></p>
+                    <p>• Incident ticket: <span className="text-primary">INC-9087</span></p>
+                  </div>
+                  <div className="flex items-center gap-2 pt-1">
+                    <Button 
+                      size="sm" 
+                      variant="default"
+                      onClick={() => {
+                        setShowIncidentBanner(false);
+                        onCreateIncidentWorkspace?.();
+                      }}
+                    >
+                      Create Incident Workspace
+                    </Button>
+                    <Button 
+                      size="sm" 
+                      variant="ghost"
+                      onClick={() => setShowIncidentBanner(false)}
+                    >
+                      Ignore
+                    </Button>
+                  </div>
+                </div>
+              </div>
+              <Button 
+                variant="ghost" 
+                size="icon" 
+                className="h-6 w-6 text-muted-foreground hover:text-foreground"
+                onClick={() => setShowIncidentBanner(false)}
+              >
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
+          </motion.div>
+        )}
 
         {/* Meeting Outcomes - Collapsible */}
         <Collapsible open={meetingsOpen} onOpenChange={setMeetingsOpen}>

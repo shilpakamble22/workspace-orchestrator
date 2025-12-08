@@ -6,6 +6,7 @@ import { ProjectDirectoryView } from "@/components/views/ProjectDirectoryView";
 import { ProjectDetailView } from "@/components/views/ProjectDetailView";
 import { AgentsView } from "@/components/views/AgentsView";
 import { InsightsView } from "@/components/views/InsightsView";
+import { IncidentWorkspaceView } from "@/components/views/IncidentWorkspaceView";
 import SettingsView from "@/components/views/SettingsView";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -20,6 +21,7 @@ const headerConfig: Record<string, { title: string; subtitle?: string }> = {
 const Index = () => {
   const [activeTab, setActiveTab] = useState("home");
   const [selectedProjectId, setSelectedProjectId] = useState<string | null>(null);
+  const [showIncidentWorkspace, setShowIncidentWorkspace] = useState(false);
 
   const currentHeader = headerConfig[activeTab] || headerConfig.home;
 
@@ -33,16 +35,23 @@ const Index = () => {
   };
 
   const renderView = () => {
+    if (showIncidentWorkspace) {
+      return <IncidentWorkspaceView onBack={() => setShowIncidentWorkspace(false)} />;
+    }
+
     if (activeTab === "projects" && selectedProjectId) {
       return <ProjectDetailView onBack={() => setSelectedProjectId(null)} />;
     }
 
     switch (activeTab) {
       case "home":
-        return <HomeView onNavigateToProject={() => {
-          setActiveTab("projects");
-          setSelectedProjectId("emcps-launch");
-        }} />;
+        return <HomeView 
+          onNavigateToProject={() => {
+            setActiveTab("projects");
+            setSelectedProjectId("emcps-launch");
+          }} 
+          onCreateIncidentWorkspace={() => setShowIncidentWorkspace(true)}
+        />;
       case "projects":
         return <ProjectDirectoryView onSelectProject={handleSelectProject} />;
       case "agents":
@@ -61,6 +70,9 @@ const Index = () => {
   };
 
   const getHeaderTitle = () => {
+    if (showIncidentWorkspace) {
+      return "Incident Workspace";
+    }
     if (activeTab === "projects" && selectedProjectId) {
       return "EMCPS Launch";
     }
@@ -68,6 +80,9 @@ const Index = () => {
   };
 
   const getHeaderSubtitle = () => {
+    if (showIncidentWorkspace) {
+      return "Active incident response workspace";
+    }
     if (activeTab === "projects" && selectedProjectId) {
       return "Enterprise Multi-Cloud Platform Services";
     }
@@ -87,7 +102,7 @@ const Index = () => {
         <div className="p-6">
           <AnimatePresence mode="wait">
             <motion.div
-              key={activeTab + (selectedProjectId ? `-${selectedProjectId}` : "")}
+              key={activeTab + (selectedProjectId ? `-${selectedProjectId}` : "") + (showIncidentWorkspace ? '-incident' : '')}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
