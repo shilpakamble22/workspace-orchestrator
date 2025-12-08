@@ -2,19 +2,22 @@ import { Video, CheckCircle2, AlertTriangle, ArrowRight, Clock } from "lucide-re
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { motion } from "framer-motion";
-
 interface MeetingOutcomesCardProps {
   onReview: () => void;
 }
-
-export function MeetingOutcomesCard({ onReview }: MeetingOutcomesCardProps) {
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.4, delay: 0.2 }}
-      className="relative overflow-hidden rounded-xl border border-primary/30 bg-gradient-to-br from-primary/10 via-card to-card p-6 glow-primary"
-    >
+export function MeetingOutcomesCard({
+  onReview
+}: MeetingOutcomesCardProps) {
+  return <motion.div initial={{
+    opacity: 0,
+    y: 20
+  }} animate={{
+    opacity: 1,
+    y: 0
+  }} transition={{
+    duration: 0.4,
+    delay: 0.2
+  }} className="relative overflow-hidden rounded-xl border border-primary/30 bg-gradient-to-br from-primary/10 via-card to-card p-6 glow-primary">
       {/* Glow effect */}
       <div className="absolute -right-20 -top-20 h-40 w-40 rounded-full bg-primary/20 blur-3xl" />
       
@@ -64,7 +67,7 @@ export function MeetingOutcomesCard({ onReview }: MeetingOutcomesCardProps) {
 
         <div className="mt-5 flex items-center gap-3">
           <Button onClick={onReview} className="gap-2" variant="glow">
-            Review & Orchestrate
+            Review 
             <ArrowRight className="h-4 w-4" />
           </Button>
           <Button variant="ghost" className="text-muted-foreground">
@@ -72,6 +75,5 @@ export function MeetingOutcomesCard({ onReview }: MeetingOutcomesCardProps) {
           </Button>
         </div>
       </div>
-    </motion.div>
-  );
+    </motion.div>;
 }
