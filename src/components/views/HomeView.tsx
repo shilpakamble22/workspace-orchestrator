@@ -218,17 +218,17 @@ export function HomeView({
             <CollapsibleTrigger asChild>
               <button className="flex w-full items-center justify-between py-2 text-left">
                 <h2 className="text-lg font-semibold text-foreground">My Workspaces</h2>
-                <div className="flex items-center gap-2">
-                  <Button variant="outline" size="sm" className="gap-1.5" onClick={e => e.stopPropagation()}>
-                    <Plus className="h-4 w-4" />
-                    New Workspace
-                  </Button>
-                  <ChevronDown className={`h-5 w-5 text-muted-foreground transition-transform duration-200 ${workspacesOpen ? 'rotate-0' : '-rotate-90'}`} />
-                </div>
+                <ChevronDown className={`h-5 w-5 text-muted-foreground transition-transform duration-200 ${workspacesOpen ? 'rotate-0' : '-rotate-90'}`} />
               </button>
             </CollapsibleTrigger>
             <CollapsibleContent className="data-[state=open]:animate-accordion-down data-[state=closed]:animate-accordion-up">
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 pt-2">
+              <div className="flex justify-end mb-3 pt-2">
+                <Button variant="outline" size="sm" className="gap-1.5">
+                  <Plus className="h-4 w-4" />
+                  New Workspace
+                </Button>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {projects.map((project, index) => <ProjectCard key={index} {...project} onClick={() => handleProjectClick(project.id)} />)}
               </div>
             </CollapsibleContent>
