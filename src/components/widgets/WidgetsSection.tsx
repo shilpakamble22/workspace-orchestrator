@@ -30,7 +30,7 @@ export function WidgetsSection() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         <WidgetTile icon={MessageSquare} label="Catch me up on Slack" onClick={() => setSlackCatchUpOpen(true)} />
         <WidgetTile icon={Calendar} label="Prep me for my next meeting" onClick={() => setMeetingPrepOpen(true)} />
-        <WidgetTile icon={Plus} label="Add widget" onClick={() => setAddWidgetOpen(true)} isAddTile />
+        <WidgetTile icon={Plus} label="Add Agent" onClick={() => setAddWidgetOpen(true)} isAddTile />
       </div>
 
       <AddWidgetDialog open={addWidgetOpen} onOpenChange={setAddWidgetOpen} onSelectWidget={handleSelectWidget} />
