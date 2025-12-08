@@ -131,48 +131,6 @@ const mockProjects: Project[] = [{
   decisions: 2,
   members: 6,
   progress: 45
-}, {
-  id: "acme-onboarding",
-  name: "ACME Corp Onboarding",
-  description: "Enterprise customer onboarding - Q1 target",
-  type: "customer",
-  status: "on-track",
-  owner: "Sarah Johnson",
-  ownerAvatar: "SJ",
-  team: "Customer Success",
-  lastUpdated: "4 hours ago",
-  tasksAtRisk: 1,
-  decisions: 3,
-  members: 5,
-  progress: 60
-}, {
-  id: "cost-optimization",
-  name: "Cloud Cost Optimization",
-  description: "Q1 2025 cost reduction initiative",
-  type: "initiative",
-  status: "on-track",
-  owner: "David Kim",
-  ownerAvatar: "DK",
-  team: "Platform Team",
-  lastUpdated: "1 day ago",
-  tasksAtRisk: 0,
-  decisions: 4,
-  members: 7,
-  progress: 35
-}, {
-  id: "security-audit",
-  name: "Annual Security Audit",
-  description: "SOC2 and compliance review",
-  type: "operations",
-  status: "completed",
-  owner: "Lisa Wang",
-  ownerAvatar: "LW",
-  team: "Security Team",
-  lastUpdated: "3 days ago",
-  tasksAtRisk: 0,
-  decisions: 12,
-  members: 4,
-  progress: 100
 }];
 const portfolioViews = [{
   label: "All projects owned by SVP Engineering",
