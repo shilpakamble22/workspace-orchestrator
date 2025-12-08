@@ -40,14 +40,6 @@ const tasks = [
     status: "todo" as const,
     priority: "medium" as const,
   },
-  {
-    title: "Prepare exec summary for LA launch",
-    source: "outlook" as const,
-    project: "EMCPS Launch",
-    dueDate: "Dec 22",
-    status: "todo" as const,
-    priority: "high" as const,
-  },
 ];
 
 export function HomeView({ onNavigateToProject }: HomeViewProps) {
@@ -102,7 +94,7 @@ export function HomeView({ onNavigateToProject }: HomeViewProps) {
         <Collapsible open={meetingsOpen} onOpenChange={setMeetingsOpen}>
           <CollapsibleTrigger asChild>
             <button className="flex w-full items-center justify-between py-2 text-left">
-              <h2 className="text-lg font-semibold text-foreground">Meetings Processed</h2>
+              <h2 className="text-lg font-semibold text-foreground">Meetings Processed (3)</h2>
               <ChevronDown className={`h-5 w-5 text-muted-foreground transition-transform duration-200 ${meetingsOpen ? 'rotate-0' : '-rotate-90'}`} />
             </button>
           </CollapsibleTrigger>
