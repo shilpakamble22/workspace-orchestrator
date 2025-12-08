@@ -48,10 +48,10 @@ const initialActions = [{
   linked: null as string | null
 }, {
   id: 3,
-  title: "Review and update API documentation for EMCPS connectors",
+  title: "Ping in #emcps-dev channel for updated API documentation",
   assignee: "Dev Team",
-  type: "jira" as const,
-  linked: "EMCPS-2141"
+  type: "slack" as const,
+  linked: null as string | null
 }, {
   id: 4,
   title: "Update FAQ for EMCPS LA with new information – Available only to EES organization",
@@ -149,6 +149,7 @@ export function MeetingOutcomesPanel({
   const [showJiraModal, setShowJiraModal] = useState(false);
   const [showEmailModal, setShowEmailModal] = useState(false);
   const [showConfluenceModal, setShowConfluenceModal] = useState(false);
+  const [showSlackModal, setShowSlackModal] = useState(false);
   const [selectedTimeSlot, setSelectedTimeSlot] = useState<number | null>(null);
 
   // Risk flow state
@@ -252,6 +253,23 @@ export function MeetingOutcomesPanel({
         <button className="text-primary hover:underline text-sm font-medium">View page</button>
       </div>);
   };
+  const handleOpenSlack = (action: typeof initialActions[0]) => {
+    setSelectedActionId(action.id);
+    setShowSlackModal(true);
+  };
+  const handleSendSlackMessage = () => {
+    if (!selectedActionId) return;
+    setActions(prev => prev.map(a => a.id === selectedActionId ? {
+      ...a,
+      linked: "Slack Message"
+    } : a));
+    setShowSlackModal(false);
+    setSelectedActionId(null);
+    toast.success(<div className="flex items-center justify-between gap-4">
+        <span>Message sent to #emcps-dev</span>
+        <button className="text-primary hover:underline text-sm font-medium">View in Slack</button>
+      </div>);
+  };
   return <AnimatePresence>
       {isOpen && <>
           {/* Backdrop */}
@@ -339,6 +357,10 @@ export function MeetingOutcomesPanel({
                                   {action.type === "confluence" && <Button size="sm" variant="outline" className="gap-1.5" onClick={() => handleOpenConfluence(action)}>
                                       <FileText className="h-3 w-3" />
                                       Update Confluence Page
+                                    </Button>}
+                                  {action.type === "slack" && <Button size="sm" variant="outline" className="gap-1.5" onClick={() => handleOpenSlack(action)}>
+                                      <Send className="h-3 w-3" />
+                                      Ping in Slack
                                     </Button>}
                                 </div>}
                             </div>
@@ -1013,6 +1035,62 @@ Priya Sharma`} className="text-sm" />
                 <Button variant="glow" className="gap-1.5" onClick={handleUpdateConfluencePage}>
                   <FileText className="h-4 w-4" />
                   Update Page
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+
+          {/* Slack Modal */}
+          <Dialog open={showSlackModal} onOpenChange={setShowSlackModal}>
+            <DialogContent className="max-w-lg">
+              <DialogHeader>
+                <DialogTitle className="flex items-center gap-2">
+                  <Send className="h-5 w-5 text-success" />
+                  Ping in Slack
+                </DialogTitle>
+              </DialogHeader>
+
+              <div className="space-y-4">
+                <div className="rounded-lg border border-border bg-muted/30 p-4">
+                  <div className="flex items-center gap-2 mb-3">
+                    <Badge variant="success">#emcps-dev</Badge>
+                    <Badge variant="muted">Channel</Badge>
+                  </div>
+                  <p className="text-sm font-medium text-foreground mb-2">
+                    Request for updated API documentation
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    Send a message to the #emcps-dev channel requesting the updated API documentation for EMCPS connectors.
+                  </p>
+                </div>
+
+                <div className="space-y-3">
+                  <Label>Message</Label>
+                  <Textarea 
+                    className="min-h-[120px] text-sm"
+                    defaultValue={`Hey team 👋
+
+Following up from the EMCPS Launch Go/No-Go Checkpoint meeting (Dec 5).
+
+Can someone share the updated API documentation for the EMCPS connectors? We need this for the performance testing setup.
+
+Thanks!`}
+                  />
+                </div>
+
+                <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                  <Link2 className="h-3 w-3" />
+                  <span>Linked to: EMCPS Launch Go/No-Go Checkpoint meeting</span>
+                </div>
+              </div>
+
+              <DialogFooter>
+                <Button variant="outline" onClick={() => setShowSlackModal(false)}>
+                  Cancel
+                </Button>
+                <Button variant="glow" className="gap-1.5" onClick={handleSendSlackMessage}>
+                  <Send className="h-4 w-4" />
+                  Send Message
                 </Button>
               </DialogFooter>
             </DialogContent>
