@@ -1,13 +1,24 @@
 import { motion } from "framer-motion";
-import { TrendingUp, TrendingDown, Calendar, Clock, CheckCircle2, AlertTriangle, Users, MessageSquare, FileText, Video } from "lucide-react";
+import { TrendingUp, TrendingDown, Calendar, Clock, CheckCircle2, AlertTriangle, Users, MessageSquare, FileText, Video, ArrowRight } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
-const weeklyStats = [
-  { label: "Tasks Completed", value: 23, change: 15, trend: "up", icon: CheckCircle2 },
-  { label: "Meetings Attended", value: 16, change: -5, trend: "down", icon: Video },
-  { label: "Decisions Made", value: 8, change: 33, trend: "up", icon: FileText },
-  { label: "Focus Hours", value: 12, change: 20, trend: "up", icon: Clock },
+const todayStats = [
+  { label: "Tasks done", value: 7, color: "success" },
+  { label: "Decisions", value: 3, color: "info" },
+  { label: "Incidents", value: 1, color: "warning" },
+];
+
+const weekStats = [
+  { icon: Calendar, text: "16 meetings scheduled" },
+  { icon: Clock, text: "6 hours of focus time" },
+  { icon: AlertTriangle, text: "4 tasks at risk", iconColor: "text-warning" },
+];
+
+const recommendedActions = [
+  "Remind SVP about EMCPS approval",
+  "Block focus time for performance review",
+  "Follow up on connector testing delay",
 ];
 
 const projectInsights = [
@@ -35,53 +46,69 @@ const upcomingItems = [
 export function InsightsView() {
   return (
     <div className="space-y-8">
-      {/* Header */}
-      <motion.div
-        initial={{ opacity: 0, y: -10 }}
-        animate={{ opacity: 1, y: 0 }}
-      >
-        <h1 className="text-2xl font-bold text-foreground">Insights</h1>
-        <p className="text-sm text-muted-foreground">Your productivity overview and recommendations</p>
-      </motion.div>
-
-      {/* Weekly Stats */}
+      {/* Insights & Planning Section - Similar to Home */}
       <motion.section
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
+        className="rounded-xl border border-border bg-card p-6"
       >
-        <h2 className="text-lg font-semibold text-foreground mb-4">This Week</h2>
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          {weeklyStats.map((stat, index) => {
-            const Icon = stat.icon;
-            return (
+        <div className="flex items-center gap-3 mb-5">
+          <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-info/20">
+            <TrendingUp className="h-5 w-5 text-info" />
+          </div>
+          <div>
+            <h3 className="font-semibold text-foreground">Insights & Planning</h3>
+            <p className="text-sm text-muted-foreground">Today's Snapshot</p>
+          </div>
+        </div>
+
+        <div className="space-y-4">
+          {/* Today stats */}
+          <div className="grid grid-cols-3 gap-3">
+            {todayStats.map((stat, index) => (
               <motion.div
                 key={stat.label}
                 initial={{ opacity: 0, scale: 0.95 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.1 + index * 0.05 }}
-                className="rounded-xl border border-border bg-card p-5"
+                className={`rounded-lg bg-${stat.color}/10 p-3 text-center`}
               >
-                <div className="flex items-center justify-between mb-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10">
-                    <Icon className="h-5 w-5 text-primary" />
-                  </div>
-                  <div className="flex items-center gap-1">
-                    {stat.trend === "up" ? (
-                      <TrendingUp className="h-4 w-4 text-success" />
-                    ) : (
-                      <TrendingDown className="h-4 w-4 text-destructive" />
-                    )}
-                    <span className={stat.trend === "up" ? "text-success text-sm" : "text-destructive text-sm"}>
-                      {stat.change > 0 ? "+" : ""}{stat.change}%
-                    </span>
-                  </div>
-                </div>
-                <p className="text-3xl font-bold text-foreground">{stat.value}</p>
-                <p className="text-sm text-muted-foreground">{stat.label}</p>
+                <p className={`text-2xl font-bold text-${stat.color}`}>{stat.value}</p>
+                <p className="text-xs text-muted-foreground">{stat.label}</p>
               </motion.div>
-            );
-          })}
+            ))}
+          </div>
+
+          {/* Week stats */}
+          <div className="rounded-lg bg-muted/50 p-4">
+            <p className="text-sm font-medium text-foreground mb-2">This Week</p>
+            <div className="space-y-2 text-sm text-muted-foreground">
+              {weekStats.map((stat, index) => {
+                const Icon = stat.icon;
+                return (
+                  <div key={index} className="flex items-center gap-2">
+                    <Icon className={`h-4 w-4 ${stat.iconColor || ""}`} />
+                    <span>{stat.text}</span>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Recommendations */}
+          <div className="space-y-2">
+            <p className="text-sm font-medium text-foreground">Recommended Actions</p>
+            {recommendedActions.map((action, index) => (
+              <button
+                key={index}
+                className="w-full flex items-center justify-between rounded-lg bg-accent/50 px-4 py-3 text-sm text-left transition-colors hover:bg-accent"
+              >
+                <span>{action}</span>
+                <ArrowRight className="h-4 w-4 text-muted-foreground" />
+              </button>
+            ))}
+          </div>
         </div>
       </motion.section>
 
