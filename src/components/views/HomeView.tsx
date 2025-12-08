@@ -81,6 +81,15 @@ export function HomeView({
     decisions: 8,
     members: 8,
     lastUpdated: "1 day ago"
+  }, {
+    name: "EMCPS Latency Incident",
+    description: "Critical latency spike investigation and resolution for EMCPS connectors",
+    status: "at-risk" as const,
+    progress: 35,
+    tasksAtRisk: 4,
+    decisions: 2,
+    members: 6,
+    lastUpdated: "30 min ago"
   }];
   return <>
       <div className="space-y-6">
