@@ -120,7 +120,8 @@ const Index = () => {
       <main className="pl-64">
         <Header 
           title={getHeaderTitle()} 
-          subtitle={getHeaderSubtitle()} 
+          subtitle={getHeaderSubtitle()}
+          onAskAnythingClick={() => handleTabChange("ask")}
         />
         
         <div className="p-6">
