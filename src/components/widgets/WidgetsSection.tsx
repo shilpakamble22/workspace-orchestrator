@@ -13,19 +13,7 @@ export function WidgetsSection() {
     console.log("Selected widget:", widgetId);
     // Handle widget addition logic here
   };
-  return <motion.section initial={{
-    opacity: 0,
-    y: 20
-  }} animate={{
-    opacity: 1,
-    y: 0
-  }} transition={{
-    duration: 0.4,
-    delay: 0.35
-  }}>
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="text-lg font-semibold text-foreground">My Agents</h2>
-      </div>
+  return <div>
       
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         <WidgetTile icon={MessageSquare} label="Catch me up on Slack" onClick={() => setSlackCatchUpOpen(true)} />
@@ -36,5 +24,5 @@ export function WidgetsSection() {
       <AddWidgetDialog open={addWidgetOpen} onOpenChange={setAddWidgetOpen} onSelectWidget={handleSelectWidget} />
       <MeetingPrepModal open={meetingPrepOpen} onOpenChange={setMeetingPrepOpen} />
       <SlackCatchUpModal open={slackCatchUpOpen} onOpenChange={setSlackCatchUpOpen} />
-    </motion.section>;
+    </div>;
 }
