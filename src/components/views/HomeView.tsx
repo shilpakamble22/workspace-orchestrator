@@ -8,7 +8,6 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 import { motion } from "framer-motion";
 import { ArrowRight, Plus, ChevronDown, AlertTriangle, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-
 interface HomeViewProps {
   onNavigateToProject: () => void;
   onCreateIncidentWorkspace?: () => void;
@@ -92,7 +91,6 @@ export function HomeView({
     members: 6,
     lastUpdated: "30 min ago"
   }];
-
   const handleProjectClick = (projectId: string) => {
     if (projectId === "incident-latency") {
       onCreateIncidentWorkspace?.();
@@ -103,12 +101,13 @@ export function HomeView({
   return <>
       <div className="space-y-6">
         {/* Incident Alert Banner */}
-        {showIncidentBanner && (
-          <motion.div 
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="rounded-lg border border-destructive/30 bg-destructive/10 px-4 py-3"
-          >
+        {showIncidentBanner && <motion.div initial={{
+        opacity: 0,
+        y: -10
+      }} animate={{
+        opacity: 1,
+        y: 0
+      }} className="rounded-lg border border-destructive/30 bg-destructive/10 px-4 py-3">
             <div className="flex items-start justify-between gap-4">
               <div className="flex items-start gap-3">
                 <AlertTriangle className="h-5 w-5 text-destructive mt-0.5" />
@@ -119,37 +118,23 @@ export function HomeView({
                     <p>• Incident ticket: <span className="text-primary">INC-9087</span></p>
                   </div>
                   <div className="flex items-center gap-2 pt-1">
-                    <Button 
-                      size="sm" 
-                      variant="default"
-                      onClick={() => {
-                        setShowIncidentBanner(false);
-                        onCreateIncidentWorkspace?.();
-                      }}
-                    >
+                    <Button size="sm" variant="default" onClick={() => {
+                  setShowIncidentBanner(false);
+                  onCreateIncidentWorkspace?.();
+                }}>
                       Create Incident Workspace
                     </Button>
-                    <Button 
-                      size="sm" 
-                      variant="ghost"
-                      onClick={() => setShowIncidentBanner(false)}
-                    >
+                    <Button size="sm" variant="ghost" onClick={() => setShowIncidentBanner(false)}>
                       Ignore
                     </Button>
                   </div>
                 </div>
               </div>
-              <Button 
-                variant="ghost" 
-                size="icon" 
-                className="h-6 w-6 text-muted-foreground hover:text-foreground"
-                onClick={() => setShowIncidentBanner(false)}
-              >
+              <Button variant="ghost" size="icon" className="h-6 w-6 text-muted-foreground hover:text-foreground" onClick={() => setShowIncidentBanner(false)}>
                 <X className="h-4 w-4" />
               </Button>
             </div>
-          </motion.div>
-        )}
+          </motion.div>}
 
         {/* Meeting Outcomes - Collapsible */}
         <Collapsible open={meetingsOpen} onOpenChange={setMeetingsOpen}>
@@ -226,7 +211,7 @@ export function HomeView({
             <h2 className="text-lg font-semibold text-foreground">My Workspaces</h2>
             <Button variant="outline" size="sm" className="gap-1.5">
               <Plus className="h-4 w-4" />
-              New Project
+              New Workspace
             </Button>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
