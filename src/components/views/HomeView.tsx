@@ -2,7 +2,6 @@ import { useState } from "react";
 import { MeetingOutcomesCard } from "@/components/cards/MeetingOutcomesCard";
 import { TaskCard } from "@/components/cards/TaskCard";
 import { ProjectCard } from "@/components/cards/ProjectCard";
-import { InsightsCard } from "@/components/cards/InsightsCard";
 import { MeetingOutcomesPanel } from "@/components/panels/MeetingOutcomesPanel";
 import { WidgetsSection } from "@/components/widgets/WidgetsSection";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
@@ -44,7 +43,6 @@ export function HomeView({
   const [isPanelOpen, setIsPanelOpen] = useState(false);
   const [meetingsOpen, setMeetingsOpen] = useState(true);
   const [tasksOpen, setTasksOpen] = useState(true);
-  const [insightsOpen, setInsightsOpen] = useState(true);
   const [showIncidentBanner, setShowIncidentBanner] = useState(true);
   const [projectUpdates, setProjectUpdates] = useState({
     emcpsLaunch: {
@@ -166,18 +164,6 @@ export function HomeView({
           </CollapsibleContent>
         </Collapsible>
 
-        {/* Insights & Planning - Collapsible */}
-        <Collapsible open={insightsOpen} onOpenChange={setInsightsOpen}>
-          <CollapsibleTrigger asChild>
-            <button className="flex w-full items-center justify-between py-2 text-left">
-              <h2 className="text-lg font-semibold text-foreground">Insights & Planning</h2>
-              <ChevronDown className={`h-5 w-5 text-muted-foreground transition-transform duration-200 ${insightsOpen ? 'rotate-0' : '-rotate-90'}`} />
-            </button>
-          </CollapsibleTrigger>
-          <CollapsibleContent className="data-[state=open]:animate-accordion-down data-[state=closed]:animate-accordion-up">
-            <InsightsCard />
-          </CollapsibleContent>
-        </Collapsible>
 
         {/* My Tasks - Collapsible */}
         <Collapsible open={tasksOpen} onOpenChange={setTasksOpen}>

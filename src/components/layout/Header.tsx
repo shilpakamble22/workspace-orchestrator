@@ -6,9 +6,10 @@ import { motion } from "framer-motion";
 interface HeaderProps {
   title: string;
   subtitle?: string;
+  onAskAnythingClick?: () => void;
 }
 
-export function Header({ title, subtitle }: HeaderProps) {
+export function Header({ title, subtitle, onAskAnythingClick }: HeaderProps) {
   return (
     <motion.header
       initial={{ y: -10, opacity: 0 }}
@@ -28,11 +29,14 @@ export function Header({ title, subtitle }: HeaderProps) {
       <div className="flex items-center gap-3">
         {/* AI Search */}
         <div className="relative">
-          <div className="flex items-center gap-2 rounded-lg border border-border bg-card px-4 py-2 text-sm text-muted-foreground transition-all hover:border-primary/50 hover:bg-accent cursor-pointer group">
+          <button
+            onClick={onAskAnythingClick}
+            className="flex items-center gap-2 rounded-lg border border-border bg-card px-4 py-2 text-sm text-muted-foreground transition-all hover:border-primary/50 hover:bg-accent cursor-pointer group"
+          >
             <Sparkles className="h-4 w-4 text-primary group-hover:animate-pulse" />
             <span className="hidden sm:inline">Ask AI anything...</span>
             <kbd className="hidden sm:inline-flex ml-2 rounded bg-muted px-1.5 py-0.5 text-[10px] font-medium">⌘K</kbd>
-          </div>
+          </button>
         </div>
 
         {/* Notifications */}
