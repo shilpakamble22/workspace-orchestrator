@@ -5,8 +5,9 @@ import { ProjectCard } from "@/components/cards/ProjectCard";
 import { InsightsCard } from "@/components/cards/InsightsCard";
 import { MeetingOutcomesPanel } from "@/components/panels/MeetingOutcomesPanel";
 import { WidgetsSection } from "@/components/widgets/WidgetsSection";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { motion } from "framer-motion";
-import { ArrowRight, Plus } from "lucide-react";
+import { ArrowRight, Plus, ChevronDown, Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 interface HomeViewProps {
@@ -51,13 +52,15 @@ const tasks = [
 
 export function HomeView({ onNavigateToProject }: HomeViewProps) {
   const [isPanelOpen, setIsPanelOpen] = useState(false);
+  const [meetingsOpen, setMeetingsOpen] = useState(true);
+  const [tasksOpen, setTasksOpen] = useState(true);
+  const [insightsOpen, setInsightsOpen] = useState(true);
   const [projectUpdates, setProjectUpdates] = useState({
     emcpsLaunch: { decisions: 0, risks: 0 }
   });
 
   const handlePanelClose = () => {
     setIsPanelOpen(false);
-    // Simulate updates after interacting with the panel
     setProjectUpdates({ emcpsLaunch: { decisions: 1, risks: 1 } });
   };
 
@@ -88,74 +91,101 @@ export function HomeView({ onNavigateToProject }: HomeViewProps) {
 
   return (
     <>
-      <div className="space-y-8">
-        {/* Meeting Outcomes */}
-        <section>
-          <MeetingOutcomesCard onReview={() => setIsPanelOpen(true)} />
-        </section>
+      <div className="space-y-6">
+        {/* Notification Banner */}
+        <div className="flex items-center gap-2 rounded-lg border border-info/30 bg-info/10 px-4 py-2.5 text-sm">
+          <Info className="h-4 w-4 text-info" />
+          <span className="text-muted-foreground">This is a placeholder</span>
+        </div>
 
-        {/* My Tasks */}
-        <motion.section
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, delay: 0.3 }}
-        >
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-lg font-semibold text-foreground">My Tasks</h2>
-            <Button variant="ghost" size="sm" className="gap-1.5 text-muted-foreground">
-              View all
-              <ArrowRight className="h-4 w-4" />
-            </Button>
-          </div>
-          <div className="space-y-3">
-            {tasks.map((task, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.3, delay: 0.1 * index }}
-              >
-                <TaskCard {...task} />
-              </motion.div>
-            ))}
-          </div>
-        </motion.section>
+        {/* Meeting Outcomes - Collapsible */}
+        <Collapsible open={meetingsOpen} onOpenChange={setMeetingsOpen}>
+          <CollapsibleTrigger asChild>
+            <button className="flex w-full items-center justify-between py-2 text-left">
+              <h2 className="text-lg font-semibold text-foreground">Meetings Processed</h2>
+              <ChevronDown className={`h-5 w-5 text-muted-foreground transition-transform duration-200 ${meetingsOpen ? 'rotate-0' : '-rotate-90'}`} />
+            </button>
+          </CollapsibleTrigger>
+          <CollapsibleContent className="data-[state=open]:animate-accordion-down data-[state=closed]:animate-accordion-up">
+            <MeetingOutcomesCard onReview={() => setIsPanelOpen(true)} />
+          </CollapsibleContent>
+        </Collapsible>
+
+        {/* Insights & Planning - Collapsible */}
+        <Collapsible open={insightsOpen} onOpenChange={setInsightsOpen}>
+          <CollapsibleTrigger asChild>
+            <button className="flex w-full items-center justify-between py-2 text-left">
+              <h2 className="text-lg font-semibold text-foreground">Insights & Planning</h2>
+              <ChevronDown className={`h-5 w-5 text-muted-foreground transition-transform duration-200 ${insightsOpen ? 'rotate-0' : '-rotate-90'}`} />
+            </button>
+          </CollapsibleTrigger>
+          <CollapsibleContent className="data-[state=open]:animate-accordion-down data-[state=closed]:animate-accordion-up">
+            <InsightsCard />
+          </CollapsibleContent>
+        </Collapsible>
+
+        {/* My Tasks - Collapsible */}
+        <Collapsible open={tasksOpen} onOpenChange={setTasksOpen}>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, delay: 0.3 }}
+          >
+            <CollapsibleTrigger asChild>
+              <button className="flex w-full items-center justify-between py-2 text-left">
+                <h2 className="text-lg font-semibold text-foreground">My Tasks</h2>
+                <div className="flex items-center gap-2">
+                  <Button variant="ghost" size="sm" className="gap-1.5 text-muted-foreground" onClick={(e) => e.stopPropagation()}>
+                    View all
+                    <ArrowRight className="h-4 w-4" />
+                  </Button>
+                  <ChevronDown className={`h-5 w-5 text-muted-foreground transition-transform duration-200 ${tasksOpen ? 'rotate-0' : '-rotate-90'}`} />
+                </div>
+              </button>
+            </CollapsibleTrigger>
+            <CollapsibleContent className="data-[state=open]:animate-accordion-down data-[state=closed]:animate-accordion-up">
+              <div className="space-y-3 pt-2">
+                {tasks.map((task, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.3, delay: 0.1 * index }}
+                  >
+                    <TaskCard {...task} />
+                  </motion.div>
+                ))}
+              </div>
+            </CollapsibleContent>
+          </motion.div>
+        </Collapsible>
 
         {/* Widgets Section */}
         <WidgetsSection />
 
-        {/* Projects & Insights Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Projects */}
-          <motion.section
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: 0.4 }}
-            className="lg:col-span-2"
-          >
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold text-foreground">Projects</h2>
-              <Button variant="outline" size="sm" className="gap-1.5">
-                <Plus className="h-4 w-4" />
-                New Project
-              </Button>
-            </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {projects.map((project, index) => (
-                <ProjectCard
-                  key={index}
-                  {...project}
-                  onClick={onNavigateToProject}
-                />
-              ))}
-            </div>
-          </motion.section>
-
-          {/* Insights */}
-          <section>
-            <InsightsCard />
-          </section>
-        </div>
+        {/* Projects Section */}
+        <motion.section
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.4 }}
+        >
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-lg font-semibold text-foreground">Projects</h2>
+            <Button variant="outline" size="sm" className="gap-1.5">
+              <Plus className="h-4 w-4" />
+              New Project
+            </Button>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            {projects.map((project, index) => (
+              <ProjectCard
+                key={index}
+                {...project}
+                onClick={onNavigateToProject}
+              />
+            ))}
+          </div>
+        </motion.section>
       </div>
 
       <MeetingOutcomesPanel isOpen={isPanelOpen} onClose={handlePanelClose} />
