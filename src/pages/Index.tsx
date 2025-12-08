@@ -7,6 +7,7 @@ import { ProjectDetailView } from "@/components/views/ProjectDetailView";
 import { AgentsView } from "@/components/views/AgentsView";
 import { InsightsView } from "@/components/views/InsightsView";
 import { IncidentWorkspaceView } from "@/components/views/IncidentWorkspaceView";
+import { AskAnythingView } from "@/components/views/AskAnythingView";
 import SettingsView from "@/components/views/SettingsView";
 import { motion, AnimatePresence } from "framer-motion";
 import { format } from "date-fns";
@@ -18,6 +19,7 @@ const getGreeting = (hour: number) => {
 };
 
 const headerConfig: Record<string, { title: string; subtitle?: string }> = {
+  ask: { title: "Ask anything", subtitle: "Chat with your AI assistant" },
   projects: { title: "Projects", subtitle: "Manage and discover project workspaces" },
   agents: { title: "Agents", subtitle: "Build and manage AI workflows" },
   insights: { title: "Insights", subtitle: "Your productivity overview" },
@@ -66,6 +68,8 @@ const Index = () => {
           }} 
           onCreateIncidentWorkspace={() => setShowIncidentWorkspace(true)}
         />;
+      case "ask":
+        return <AskAnythingView />;
       case "projects":
         return <ProjectDirectoryView onSelectProject={handleSelectProject} onOpenIncidentWorkspace={() => setShowIncidentWorkspace(true)} />;
       case "agents":

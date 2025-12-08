@@ -1,4 +1,4 @@
-import { Home, FolderKanban, Bot, BarChart3, Search, Settings, Bell, User } from "lucide-react";
+import { Home, FolderKanban, Bot, BarChart3, Search, Settings, Bell, User, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 
@@ -9,6 +9,7 @@ interface SidebarProps {
 
 const navItems = [
   { id: "home", label: "Home", icon: Home },
+  { id: "ask", label: "Ask anything", icon: Sparkles },
   { id: "projects", label: "Workspaces", icon: FolderKanban },
   { id: "agents", label: "Agents", icon: Bot },
   { id: "insights", label: "Insights", icon: BarChart3 },
