@@ -49,7 +49,7 @@ const DataSourcesTab = () => {
     },
     {
       id: "calendar",
-      name: "Calendar",
+      name: "Outlook Calendar",
       icon: <Calendar className="h-5 w-5" />,
       connected: true,
       lastSync: "1 minute ago",
