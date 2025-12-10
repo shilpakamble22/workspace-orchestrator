@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { AlertTriangle, MessageSquare, Ticket, FileText, CheckSquare, ArrowLeft, RefreshCw, Zap, Users, Clock, ExternalLink, Bell } from "lucide-react";
 import { motion } from "framer-motion";
+import { SlackAlertBannerModal } from "@/components/widgets/SlackAlertBannerModal";
 
 interface IncidentWorkspaceViewProps {
   onBack: () => void;
@@ -12,6 +13,7 @@ interface IncidentWorkspaceViewProps {
 
 export function IncidentWorkspaceView({ onBack }: IncidentWorkspaceViewProps) {
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const [isAlertBannerModalOpen, setIsAlertBannerModalOpen] = useState(false);
   
   const today = new Date().toLocaleDateString('en-US', { 
     month: 'short', 
@@ -167,6 +169,11 @@ export function IncidentWorkspaceView({ onBack }: IncidentWorkspaceViewProps) {
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ duration: 0.2, delay: 0.1 + index * 0.05 }}
                     className="flex items-center gap-4 p-3 rounded-lg bg-background/50 border border-border/30 hover:border-primary/30 transition-colors group cursor-pointer"
+                    onClick={() => {
+                      if (action.title.includes("alert banner")) {
+                        setIsAlertBannerModalOpen(true);
+                      }
+                    }}
                   >
                     <div className={`p-2 rounded-lg ${action.priority === 'high' ? 'bg-destructive/20 text-destructive' : 'bg-primary/20 text-primary'}`}>
                       <action.icon className="h-4 w-4" />
@@ -270,6 +277,11 @@ export function IncidentWorkspaceView({ onBack }: IncidentWorkspaceViewProps) {
           </motion.div>
         </TabsContent>
       </Tabs>
+
+      <SlackAlertBannerModal 
+        open={isAlertBannerModalOpen} 
+        onOpenChange={setIsAlertBannerModalOpen} 
+      />
     </div>
   );
 }
