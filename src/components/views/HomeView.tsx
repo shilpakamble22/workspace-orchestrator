@@ -237,5 +237,23 @@ export function HomeView({
       </div>
 
       <MeetingOutcomesPanel isOpen={isPanelOpen} onClose={handlePanelClose} />
+
+      {/* Notification Popup - Bottom Right */}
+      <motion.div
+        initial={{ opacity: 0, y: 20, scale: 0.95 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        transition={{ duration: 0.3, delay: 1 }}
+        className="fixed bottom-6 right-6 z-50"
+      >
+        <div className="flex items-center gap-3 rounded-lg border border-destructive/30 bg-card px-4 py-3 shadow-lg">
+          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-destructive/20">
+            <AlertTriangle className="h-4 w-4 text-destructive" />
+          </div>
+          <span className="text-sm font-medium text-foreground">New potential incident</span>
+          <Button variant="ghost" size="icon" className="h-6 w-6 text-muted-foreground hover:text-foreground -mr-1">
+            <X className="h-4 w-4" />
+          </Button>
+        </div>
+      </motion.div>
     </>;
 }
