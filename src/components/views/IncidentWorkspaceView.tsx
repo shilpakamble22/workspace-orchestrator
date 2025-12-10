@@ -3,7 +3,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { AlertTriangle, MessageSquare, Ticket, FileText, CheckSquare, ArrowLeft, RefreshCw, Zap, Users, Clock, ExternalLink } from "lucide-react";
+import { AlertTriangle, MessageSquare, Ticket, FileText, CheckSquare, ArrowLeft, RefreshCw, Zap, Users, Clock, ExternalLink, Bell } from "lucide-react";
 import { motion } from "framer-motion";
 
 interface IncidentWorkspaceViewProps {
@@ -32,21 +32,15 @@ export function IncidentWorkspaceView({ onBack }: IncidentWorkspaceViewProps) {
       priority: "high"
     },
     {
-      title: "Scale up connector pods",
-      description: "Increase replicas from 3 to 6 in US-West region",
-      icon: Zap,
-      priority: "high"
-    },
-    {
-      title: "Enable verbose logging",
-      description: "Turn on debug logs for EMCPS connector service",
-      icon: FileText,
-      priority: "medium"
-    },
-    {
       title: "Notify affected customers",
       description: "Send status update to enterprise customers",
       icon: MessageSquare,
+      priority: "medium"
+    },
+    {
+      title: 'Add alert banner in "help-emcps" channel',
+      description: "Post visibility banner for support awareness",
+      icon: Bell,
       priority: "medium"
     }
   ];
