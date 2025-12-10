@@ -51,10 +51,6 @@ const Index = () => {
   };
 
   const renderView = () => {
-    if (showIncidentWorkspace) {
-      return <IncidentWorkspaceView onBack={() => setShowIncidentWorkspace(false)} />;
-    }
-
     if (activeTab === "projects" && selectedProjectId) {
       return <ProjectDetailView onBack={() => setSelectedProjectId(null)} />;
     }
@@ -88,9 +84,6 @@ const Index = () => {
   };
 
   const getHeaderTitle = () => {
-    if (showIncidentWorkspace) {
-      return "Incident Workspace";
-    }
     if (activeTab === "projects" && selectedProjectId) {
       return "EMCPS Launch";
     }
@@ -101,9 +94,6 @@ const Index = () => {
   };
 
   const getHeaderSubtitle = () => {
-    if (showIncidentWorkspace) {
-      return "Active incident response workspace";
-    }
     if (activeTab === "projects" && selectedProjectId) {
       return "Enterprise Multi-Cloud Platform Services";
     }
@@ -138,6 +128,36 @@ const Index = () => {
           </AnimatePresence>
         </div>
       </main>
+
+      {/* Incident Workspace Overlay */}
+      <AnimatePresence>
+        {showIncidentWorkspace && (
+          <>
+            {/* Backdrop - clicking closes the workspace */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="fixed inset-0 bg-background/80 backdrop-blur-sm z-40"
+              onClick={() => setShowIncidentWorkspace(false)}
+            />
+            {/* Incident Workspace Panel */}
+            <motion.div
+              initial={{ opacity: 0, x: 100 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: 100 }}
+              transition={{ duration: 0.3, ease: "easeOut" }}
+              className="fixed top-0 right-0 bottom-0 w-[calc(100%-16rem)] bg-background border-l border-border z-50 overflow-y-auto"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="p-6">
+                <IncidentWorkspaceView onBack={() => setShowIncidentWorkspace(false)} />
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
