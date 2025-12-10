@@ -188,39 +188,46 @@ export function AgentsView() {
               setSelectedAgent(agent.id);
             }
           }}>
-                <div className="flex items-start gap-4">
-                  <div className={cn("flex h-12 w-12 items-center justify-center rounded-xl", agent.type === "widget" ? "bg-info/20" : "bg-primary/20")}>
-                    <AgentIcon className={cn("h-6 w-6", agent.type === "widget" ? "text-info" : "text-primary")} />
+                <div className="flex flex-col gap-4">
+                  {/* Header row with icon and actions */}
+                  <div className="flex items-start justify-between">
+                    <div className={cn("flex h-12 w-12 items-center justify-center rounded-xl shrink-0", agent.type === "widget" ? "bg-info/20" : "bg-primary/20")}>
+                      <AgentIcon className={cn("h-6 w-6", agent.type === "widget" ? "text-info" : "text-primary")} />
+                    </div>
+                    <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                      <Button size="sm" variant="outline" className="gap-1.5">
+                        <Play className="h-3 w-3" />
+                        Run
+                      </Button>
+                      <Button size="icon" variant="ghost">
+                        <Settings className="h-4 w-4" />
+                      </Button>
+                    </div>
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2">
-                      <h3 className="font-semibold text-foreground truncate">{agent.name}</h3>
+                  
+                  {/* Content section */}
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <h3 className="font-semibold text-foreground">{agent.name}</h3>
                       <Badge variant="success" className="shrink-0">Active</Badge>
                     </div>
-                    <p className="mt-1 text-sm text-muted-foreground line-clamp-2">{agent.description}</p>
-                    <div className="mt-3 flex items-center gap-4 text-sm text-muted-foreground">
-                      <div className="flex items-center gap-1.5">
-                        <Users className="h-3.5 w-3.5" />
-                        <span>{agent.visibility === "personal" ? "Personal" : "Team"}</span>
-                      </div>
-                      <div className="flex items-center gap-1.5">
-                        <Clock className="h-3.5 w-3.5" />
-                        <span>{agent.lastRun}</span>
-                      </div>
-                      <div className="flex items-center gap-1.5">
-                        <Zap className="h-3.5 w-3.5" />
-                        <span>{agent.runsToday} runs today</span>
-                      </div>
-                    </div>
+                    <p className="text-sm text-muted-foreground line-clamp-2">{agent.description}</p>
                   </div>
-                  <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <Button size="sm" variant="outline" className="gap-1.5">
-                      <Play className="h-3 w-3" />
-                      Run
-                    </Button>
-                    <Button size="icon" variant="ghost">
-                      <Settings className="h-4 w-4" />
-                    </Button>
+                  
+                  {/* Meta info */}
+                  <div className="flex items-center gap-3 flex-wrap text-sm text-muted-foreground">
+                    <div className="flex items-center gap-1.5">
+                      <Users className="h-3.5 w-3.5" />
+                      <span>{agent.visibility === "personal" ? "Personal" : "Team"}</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <Clock className="h-3.5 w-3.5" />
+                      <span>{agent.lastRun}</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <Zap className="h-3.5 w-3.5" />
+                      <span>{agent.runsToday} runs</span>
+                    </div>
                   </div>
                 </div>
               </div>;
