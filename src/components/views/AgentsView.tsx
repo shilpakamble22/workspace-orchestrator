@@ -4,10 +4,24 @@ import { Bot, Plus, Play, Settings, Users, Zap, ChevronRight, CheckCircle2, Cloc
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
-import { CreateAgentModal } from "@/components/agents/CreateAgentModal";
+import { CreateAgentModal, CreatedAgent } from "@/components/agents/CreateAgentModal";
 import { SlackCatchUpModal } from "@/components/widgets/SlackCatchUpModal";
 import { MeetingPrepModal } from "@/components/widgets/MeetingPrepModal";
-const myAgents = [{
+
+type MyAgent = {
+  id: string | number;
+  name: string;
+  description: string;
+  status: string;
+  visibility: string;
+  project: string;
+  lastRun: string;
+  runsToday: number;
+  type: "agent" | "widget";
+  icon?: typeof MessageSquare;
+};
+
+const defaultMyAgents: MyAgent[] = [{
   id: 1,
   name: "EMCPS Launch Assistant",
   description: "Automates EMCPS post-meeting workflows, Jira updates, and status communications.",
@@ -40,6 +54,7 @@ const myAgents = [{
   type: "widget" as const,
   icon: Calendar
 }];
+
 const teamAgents = [{
   id: 2,
   name: "EMCPS Incident Helper",
@@ -59,6 +74,7 @@ const teamAgents = [{
   project: "All Projects",
   lastRun: "3 days ago"
 }];
+
 const galleryAgents = [{
   id: 4,
   name: "Meeting Follow-up",
@@ -137,11 +153,28 @@ const galleryAgents = [{
   installs: 1100,
   icon: TrendingUp
 }];
+
 export function AgentsView() {
+  const [myAgents, setMyAgents] = useState<MyAgent[]>(defaultMyAgents);
   const [selectedAgent, setSelectedAgent] = useState<string | number | null>(null);
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [slackModalOpen, setSlackModalOpen] = useState(false);
   const [meetingPrepOpen, setMeetingPrepOpen] = useState(false);
+
+  const handleAgentCreated = (agent: CreatedAgent) => {
+    const newAgent: MyAgent = {
+      id: agent.id,
+      name: agent.name,
+      description: agent.description,
+      status: agent.status,
+      visibility: agent.visibility,
+      project: agent.project,
+      lastRun: agent.lastRun,
+      runsToday: agent.runsToday,
+      type: agent.type,
+    };
+    setMyAgents(prev => [newAgent, ...prev]);
+  };
   return <div className="space-y-8">
       {/* Header */}
       <motion.div initial={{
@@ -161,7 +194,7 @@ export function AgentsView() {
         </Button>
       </motion.div>
 
-      <CreateAgentModal open={createModalOpen} onOpenChange={setCreateModalOpen} />
+      <CreateAgentModal open={createModalOpen} onOpenChange={setCreateModalOpen} onAgentCreated={handleAgentCreated} />
       <SlackCatchUpModal open={slackModalOpen} onOpenChange={setSlackModalOpen} />
       <MeetingPrepModal open={meetingPrepOpen} onOpenChange={setMeetingPrepOpen} />
 
