@@ -29,7 +29,7 @@ export function MeetingOutcomesCard({
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h3 className="font-semibold text-foreground">Meeting Processed</h3>
+                <h3 className="font-semibold text-foreground">I have processed your meeting </h3>
                 <Badge variant="success" className="text-[10px]">New</Badge>
               </div>
               <p className="text-sm text-muted-foreground">EMCPS Launch – Go/No-Go Checkpoint</p>
