@@ -11,14 +11,13 @@
     /* Redwood Yellow #F7D046 = 46 92% 62% */
     
     --background: 0 0% 100%;
-    --card: 0 0% 100%;
-    --foreground: 151 30% 15%;
+    --foreground: 0 0% 10%;
 
-    --card: 151 20% 98%;
-    --card-foreground: 151 30% 15%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 10%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 151 30% 15%;
+    --popover-foreground: 0 0% 10%;
 
     /* Redwood Green - Primary */
     --primary: 151 44% 50%;
@@ -26,14 +25,14 @@
 
     /* Redwood Yellow - Secondary */
     --secondary: 46 92% 62%;
-    --secondary-foreground: 151 30% 15%;
+    --secondary-foreground: 0 0% 10%;
 
-    --muted: 151 15% 94%;
-    --muted-foreground: 151 20% 40%;
+    --muted: 0 0% 96%;
+    --muted-foreground: 0 0% 40%;
 
     /* Redwood Yellow - Accent */
-    --accent: 46 92% 62%;
-    --accent-foreground: 151 30% 15%;
+    --accent: 46 92% 95%;
+    --accent-foreground: 0 0% 10%;
 
     --destructive: 0 72% 55%;
     --destructive-foreground: 0 0% 100%;
@@ -44,56 +43,56 @@
 
     /* Redwood Yellow - Warning */
     --warning: 46 92% 62%;
-    --warning-foreground: 151 30% 15%;
+    --warning-foreground: 0 0% 10%;
 
     /* Redwood Yellow - Info */
     --info: 46 92% 62%;
-    --info-foreground: 151 30% 15%;
+    --info-foreground: 0 0% 10%;
 
     /* Redwood Green - CTA */
     --cta: 151 44% 50%;
     --cta-foreground: 0 0% 100%;
 
-    --border: 151 20% 85%;
-    --input: 151 20% 85%;
+    --border: 0 0% 88%;
+    --input: 0 0% 88%;
     --ring: 151 44% 50%;
 
     --radius: 0.75rem;
 
     /* Sidebar - Green based */
-    --sidebar-background: 151 44% 25%;
-    --sidebar-foreground: 151 20% 95%;
+    --sidebar-background: 151 44% 20%;
+    --sidebar-foreground: 0 0% 95%;
     --sidebar-primary: 46 92% 62%;
-    --sidebar-primary-foreground: 151 30% 15%;
-    --sidebar-accent: 151 44% 35%;
+    --sidebar-primary-foreground: 0 0% 15%;
+    --sidebar-accent: 151 44% 30%;
     --sidebar-accent-foreground: 0 0% 100%;
-    --sidebar-border: 151 44% 35%;
+    --sidebar-border: 151 44% 30%;
     --sidebar-ring: 46 92% 62%;
 
     /* Custom tokens */
     --gradient-primary: linear-gradient(135deg, hsl(151, 44%, 50%) 0%, hsl(151, 44%, 60%) 100%);
-    --gradient-card: linear-gradient(180deg, hsl(0, 0%, 100%) 0%, hsl(151, 20%, 98%) 100%);
+    --gradient-card: linear-gradient(180deg, hsl(0, 0%, 100%) 0%, hsl(0, 0%, 98%) 100%);
     --gradient-glow: radial-gradient(ellipse at center, hsla(151, 44%, 50%, 0.1) 0%, transparent 70%);
     --gradient-cta: linear-gradient(135deg, hsl(46, 92%, 62%) 0%, hsl(46, 92%, 70%) 100%);
     
     --shadow-glow: 0 0 60px hsla(151, 44%, 50%, 0.15);
-    --shadow-card: 0 4px 24px hsla(151, 30%, 15%, 0.08);
-    --shadow-elevated: 0 8px 40px hsla(151, 30%, 15%, 0.12);
+    --shadow-card: 0 4px 24px hsla(0, 0%, 0%, 0.08);
+    --shadow-elevated: 0 8px 40px hsla(0, 0%, 0%, 0.12);
 
     --glass-bg: hsla(0, 0%, 100%, 0.9);
-    --glass-border: hsla(151, 20%, 85%, 0.5);
+    --glass-border: hsla(0, 0%, 90%, 0.5);
   }
 
   .dark {
-    --background: 151 30% 10%;
-    --foreground: 151 20% 95%;
-    --card: 151 30% 15%;
-    --card-foreground: 151 20% 95%;
-    --popover: 151 30% 12%;
-    --popover-foreground: 151 20% 95%;
-    --muted: 151 25% 20%;
-    --border: 151 25% 25%;
-    --input: 151 25% 25%;
+    --background: 151 20% 8%;
+    --foreground: 0 0% 95%;
+    --card: 151 20% 12%;
+    --card-foreground: 0 0% 95%;
+    --popover: 151 20% 10%;
+    --popover-foreground: 0 0% 95%;
+    --muted: 151 20% 18%;
+    --border: 151 20% 25%;
+    --input: 151 20% 25%;
   }
 }
 
