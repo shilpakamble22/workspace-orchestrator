@@ -70,17 +70,17 @@
     --sidebar-ring: 188 89% 27%;
 
     /* Custom tokens - Redwood branded */
-    --gradient-primary: linear-gradient(135deg, hsl(188 89% 27%) 0%, hsl(183 99% 38%) 100%);
-    --gradient-card: linear-gradient(180deg, hsl(218 63% 20%) 0%, hsl(218 63% 18%) 100%);
-    --gradient-glow: radial-gradient(ellipse at center, hsl(188 89% 27% / 0.15) 0%, transparent 70%);
-    --gradient-cta: linear-gradient(135deg, hsl(25 96% 49%) 0%, hsl(35 96% 55%) 100%);
+    --gradient-primary: linear-gradient(135deg, hsl(188, 89%, 27%) 0%, hsl(183, 99%, 38%) 100%);
+    --gradient-card: linear-gradient(180deg, hsl(218, 63%, 20%) 0%, hsl(218, 63%, 18%) 100%);
+    --gradient-glow: radial-gradient(ellipse at center, hsla(188, 89%, 27%, 0.15) 0%, transparent 70%);
+    --gradient-cta: linear-gradient(135deg, hsl(25, 96%, 49%) 0%, hsl(35, 96%, 55%) 100%);
     
-    --shadow-glow: 0 0 60px hsl(188 89% 27% / 0.12);
-    --shadow-card: 0 4px 24px hsl(218 63% 5% / 0.4);
-    --shadow-elevated: 0 8px 40px hsl(218 63% 5% / 0.5);
+    --shadow-glow: 0 0 60px hsla(188, 89%, 27%, 0.12);
+    --shadow-card: 0 4px 24px hsla(218, 63%, 5%, 0.4);
+    --shadow-elevated: 0 8px 40px hsla(218, 63%, 5%, 0.5);
 
-    --glass-bg: hsl(218 63% 18% / 0.85);
-    --glass-border: hsl(215 17% 35% / 0.3);
+    --glass-bg: hsla(218, 63%, 18%, 0.85);
+    --glass-border: hsla(215, 17%, 35%, 0.3);
   }
 
   .dark {
