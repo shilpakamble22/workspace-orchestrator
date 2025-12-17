@@ -40,8 +40,8 @@ const statusColors = {
 
 const priorityColors = {
   low: "bg-muted text-muted-foreground",
-  medium: "bg-warning/20 text-warning",
-  high: "bg-destructive/20 text-destructive",
+  medium: "bg-warning text-warning-foreground font-semibold",
+  high: "bg-destructive text-destructive-foreground font-semibold",
 };
 
 export function TaskCard({ title, source, project, dueDate, status, priority, ticketId }: TaskCardProps) {
