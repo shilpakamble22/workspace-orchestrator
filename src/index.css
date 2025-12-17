@@ -58,15 +58,15 @@
 
     --radius: 0.75rem;
 
-    /* Sidebar - Green based */
-    --sidebar-background: 151 44% 20%;
-    --sidebar-foreground: 0 0% 100%;
-    --sidebar-primary: 46 92% 62%;
-    --sidebar-primary-foreground: 0 0% 10%;
-    --sidebar-accent: 151 44% 30%;
-    --sidebar-accent-foreground: 0 0% 100%;
-    --sidebar-border: 151 44% 30%;
-    --sidebar-ring: 46 92% 62%;
+    /* Sidebar - Light grey based */
+    --sidebar-background: 210 21% 95%;
+    --sidebar-foreground: 0 0% 20%;
+    --sidebar-primary: 151 44% 50%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 210 21% 90%;
+    --sidebar-accent-foreground: 0 0% 20%;
+    --sidebar-border: 210 21% 88%;
+    --sidebar-ring: 151 44% 50%;
 
     /* Custom tokens */
     --gradient-primary: linear-gradient(135deg, hsl(151, 44%, 50%) 0%, hsl(151, 44%, 60%) 100%);
