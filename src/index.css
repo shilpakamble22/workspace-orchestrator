@@ -61,9 +61,9 @@
 
     /* Sidebar - Green based */
     --sidebar-background: 151 44% 20%;
-    --sidebar-foreground: 0 0% 95%;
+    --sidebar-foreground: 0 0% 100%;
     --sidebar-primary: 46 92% 62%;
-    --sidebar-primary-foreground: 0 0% 15%;
+    --sidebar-primary-foreground: 0 0% 10%;
     --sidebar-accent: 151 44% 30%;
     --sidebar-accent-foreground: 0 0% 100%;
     --sidebar-border: 151 44% 30%;
