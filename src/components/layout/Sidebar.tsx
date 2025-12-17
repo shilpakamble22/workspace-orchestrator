@@ -50,17 +50,17 @@ export function Sidebar({
           <span className="text-lg font-bold text-primary-foreground">O</span>
         </div>
         <div className="flex flex-col">
-          <span className="text-sm font-semibold text-foreground">Oracle Work AI </span>
-          <span className="text-xs text-muted-foreground">AI Companion</span>
+          <span className="text-sm font-semibold text-sidebar-foreground">Oracle Work AI </span>
+          <span className="text-xs text-sidebar-foreground/70">AI Companion</span>
         </div>
       </div>
 
       {/* Search */}
       <div className="px-4 py-4">
-        <button className="flex w-full items-center gap-3 rounded-lg border border-sidebar-border bg-sidebar-accent/50 px-3 py-2.5 text-sm text-muted-foreground transition-colors hover:bg-sidebar-accent hover:text-foreground">
+        <button className="flex w-full items-center gap-3 rounded-lg border border-sidebar-border bg-sidebar-accent/50 px-3 py-2.5 text-sm text-sidebar-foreground/70 transition-colors hover:bg-sidebar-accent hover:text-sidebar-foreground">
           <Search className="h-4 w-4" />
           <span>Search everything...</span>
-          <kbd className="ml-auto rounded bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground">⌘K</kbd>
+          <kbd className="ml-auto rounded bg-sidebar-accent px-1.5 py-0.5 text-[10px] font-medium text-sidebar-foreground/70">⌘K</kbd>
         </button>
       </div>
 
@@ -103,10 +103,10 @@ export function Sidebar({
             <User className="h-4 w-4 text-primary" />
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium text-foreground truncate">Priya Sharma</p>
-            <p className="text-xs text-muted-foreground truncate">Sr. Product Manager</p>
+            <p className="text-sm font-medium text-sidebar-foreground truncate">Priya Sharma</p>
+            <p className="text-xs text-sidebar-foreground/70 truncate">Sr. Product Manager</p>
           </div>
-          <Bell className="h-4 w-4 text-muted-foreground" />
+          <Bell className="h-4 w-4 text-sidebar-foreground/70" />
         </div>
       </div>
     </motion.aside>;
