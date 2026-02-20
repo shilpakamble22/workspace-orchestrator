@@ -50,8 +50,7 @@ export function Sidebar({
           <span className="text-lg font-bold text-primary-foreground">O</span>
         </div>
         <div className="flex flex-col">
-          <span className="text-sm font-semibold text-sidebar-foreground">Oracle Work AI </span>
-          <span className="text-xs text-sidebar-foreground/70">AI Companion</span>
+         <span className="text-sm font-semibold text-sidebar-foreground">Work AI Companion</span>
         </div>
       </div>
 
