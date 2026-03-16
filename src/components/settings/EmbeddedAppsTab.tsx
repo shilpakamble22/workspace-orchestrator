@@ -1,175 +1,160 @@
-import { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Switch } from "@/components/ui/switch";
-import { Label } from "@/components/ui/label";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { MessageSquare, Mail, CheckSquare } from "lucide-react";
+import { ExternalLink, Search, Layout, BookOpen, Zap, FileText, MessageSquare, HelpCircle } from "lucide-react";
+
+const connectors = [
+  {
+    name: "Central Confluence Connector",
+    description: "Search and reference Confluence pages inside the companion",
+    icon: FileText,
+  },
+  {
+    name: "SharePoint / OneDrive Connector",
+    description: "Access SharePoint files and OneDrive documents in chat",
+    icon: Layout,
+  },
+  {
+    name: "Ask Oracle Connector",
+    description: "Surface internal knowledge base content in chat",
+    icon: HelpCircle,
+  },
+];
+
+const comingSoon = ["Slack Connector", "Jira MCP Connector"];
+
+const steps = [
+  {
+    number: 1,
+    title: "Open the Apps panel",
+    description: "Go to the Work AI Companion homepage and open the left sidebar. Click Apps to open the connector catalogue.",
+  },
+  {
+    number: 2,
+    title: "Find and click the connector",
+    description: "Browse or search for the app you want. Click on it to open the details page, then click Connect.",
+  },
+  {
+    number: 3,
+    title: "Authenticate",
+    description: "Click Continue and follow the on-screen steps. Most apps use Oracle SSO. For Confluence, click Allow on the additional permissions screen.",
+  },
+  {
+    number: 4,
+    title: "Start using it",
+    description: "Once connected, click Start Chat. Or in any chat, click the + icon in the prompt bar → More to add the connector.",
+  },
+  {
+    number: 5,
+    title: "Use it in your prompt",
+    description: "Mention the app by name in your prompt, or select it via + / More. The AI will search and reference your connected data without leaving the chat.",
+  },
+];
+
+const capabilities = [
+  "Search and reference your connected data inside chat",
+  "Provide interactive UI elements inside the conversation",
+  "Support Deep Research with citations from internal sources",
+  "Sync data ahead of time for faster answers",
+];
 
 const EmbeddedAppsTab = () => {
-  const [settings, setSettings] = useState({
-    slackEnabled: true,
-    slackEphemeral: true,
-    slackAutoPost: false,
-    slackProposeMessages: true,
-    slackAutoPostIncidents: false,
-    outlookEnabled: true,
-    outlookSidePanel: true,
-    outlookDraftOnly: true,
-    outlookDecisionSnippets: false,
-    jiraEnabled: true,
-    jiraCreateTickets: true,
-    jiraUpdateFields: true,
-    jiraSuggestClose: false,
-  });
-
   return (
-    <div className="space-y-6">
-      <div className="mb-6">
-        <h3 className="text-lg font-semibold text-foreground mb-1">Embedded Experiences</h3>
-        <p className="text-sm text-muted-foreground">
-          Control how Workspace AI behaves inside other tools (for the chat-based control surface).
-        </p>
+    <div className="space-y-10">
+      {/* Header */}
+      <div>
+        <p className="text-xs font-semibold tracking-widest text-primary uppercase mb-2">Oracle Tools</p>
+        <h2 className="text-3xl font-extrabold text-foreground mb-4" style={{ fontFamily: "'Georgia', serif" }}>
+          Apps &amp; Connectors
+        </h2>
       </div>
 
-      <Card className="bg-card/50 border-border/50">
-        <CardHeader className="py-4">
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-primary/10 text-primary">
-              <MessageSquare className="h-5 w-5" />
-            </div>
-            <CardTitle className="text-base">Slack</CardTitle>
-            <Badge variant="outline" className="text-xs">Embedded</Badge>
-          </div>
-        </CardHeader>
-        <CardContent className="pt-0 space-y-4">
-          <div className="flex items-center justify-between p-3 rounded-lg bg-muted/20">
-            <Label className="text-sm">Enable Workspace AI in Slack</Label>
-            <Switch
-              checked={settings.slackEnabled}
-              onCheckedChange={(checked) => setSettings({ ...settings, slackEnabled: checked })}
-            />
-          </div>
-          <div>
-            <Label className="text-sm text-muted-foreground mb-3 block">Ephemeral behavior:</Label>
-            <div className="space-y-3">
-              <div className="flex items-center justify-between p-3 rounded-lg bg-muted/20">
-                <Label className="text-sm">Default responses as ephemeral (visible only to me)</Label>
-                <Switch
-                  checked={settings.slackEphemeral}
-                  onCheckedChange={(checked) => setSettings({ ...settings, slackEphemeral: checked })}
-                />
-              </div>
-              <div className="flex items-center justify-between p-3 rounded-lg bg-muted/20">
-                <div>
-                  <Label className="text-sm">Allow posting to channel by default</Label>
-                  <p className="text-xs text-muted-foreground mt-1">Not recommended</p>
-                </div>
-                <Switch
-                  checked={settings.slackAutoPost}
-                  onCheckedChange={(checked) => setSettings({ ...settings, slackAutoPost: checked })}
-                />
-              </div>
-            </div>
-          </div>
-          <div>
-            <Label className="text-sm text-muted-foreground mb-3 block">Allowed actions:</Label>
-            <div className="space-y-3">
-              <div className="flex items-center justify-between p-3 rounded-lg bg-muted/20">
-                <Label className="text-sm">Propose messages for channels, require explicit user "Post" click</Label>
-                <Switch
-                  checked={settings.slackProposeMessages}
-                  onCheckedChange={(checked) => setSettings({ ...settings, slackProposeMessages: checked })}
-                />
-              </div>
-              <div className="flex items-center justify-between p-3 rounded-lg bg-muted/20">
-                <div>
-                  <Label className="text-sm">Auto-post status updates when incidents change state</Label>
-                  <p className="text-xs text-muted-foreground mt-1">Admin-policy dependent</p>
-                </div>
-                <Switch
-                  checked={settings.slackAutoPostIncidents}
-                  onCheckedChange={(checked) => setSettings({ ...settings, slackAutoPostIncidents: checked })}
-                />
-              </div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+      {/* Two-column layout */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+        {/* Left: Description */}
+        <div className="space-y-6">
+          <p className="text-muted-foreground leading-relaxed">
+            Apps are small applications that run inside the Work AI Companion and extend what the AI can do. Think of them like apps on a smartphone — except instead of opening them separately, you use them directly in a chat conversation. They let you bring external tools and data into a chat so the AI can search, reference, and take actions without leaving the conversation.
+          </p>
 
-      <Card className="bg-card/50 border-border/50">
-        <CardHeader className="py-4">
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-primary/10 text-primary">
-              <Mail className="h-5 w-5" />
-            </div>
-            <CardTitle className="text-base">Outlook</CardTitle>
-            <Badge variant="outline" className="text-xs">Embedded</Badge>
+          <div>
+            <p className="text-xs font-semibold tracking-widest text-muted-foreground uppercase mb-3">
+              What Connected Apps Can Do
+            </p>
+            <ul className="space-y-2">
+              {capabilities.map((cap, i) => (
+                <li key={i} className="flex items-start gap-2 text-sm text-foreground">
+                  <span className="text-primary mt-0.5">→</span>
+                  {cap}
+                </li>
+              ))}
+            </ul>
           </div>
-        </CardHeader>
-        <CardContent className="pt-0 space-y-3">
-          <div className="flex items-center justify-between p-3 rounded-lg bg-muted/20">
-            <Label className="text-sm">Show Workspace AI side panel by default on threads tagged with specific labels</Label>
-            <Switch
-              checked={settings.outlookSidePanel}
-              onCheckedChange={(checked) => setSettings({ ...settings, outlookSidePanel: checked })}
-            />
-          </div>
-          <div className="flex items-center justify-between p-3 rounded-lg bg-muted/20">
-            <div>
-              <Label className="text-sm">Draft replies but never auto-send emails</Label>
-              <p className="text-xs text-muted-foreground mt-1">Recommended</p>
-            </div>
-            <Switch
-              checked={settings.outlookDraftOnly}
-              onCheckedChange={(checked) => setSettings({ ...settings, outlookDraftOnly: checked })}
-            />
-          </div>
-          <div className="flex items-center justify-between p-3 rounded-lg bg-muted/20">
-            <Label className="text-sm">Suggest including decision/log snippets at the bottom of status mails</Label>
-            <Switch
-              checked={settings.outlookDecisionSnippets}
-              onCheckedChange={(checked) => setSettings({ ...settings, outlookDecisionSnippets: checked })}
-            />
-          </div>
-        </CardContent>
-      </Card>
+        </div>
 
-      <Card className="bg-card/50 border-border/50">
-        <CardHeader className="py-4">
-          <div className="flex items-center gap-3">
-            <div className="p-2 rounded-lg bg-primary/10 text-primary">
-              <CheckSquare className="h-5 w-5" />
+        {/* Right: Connectors list */}
+        <div className="space-y-4">
+          <p className="text-xs font-semibold tracking-widest text-muted-foreground uppercase">
+            Available MCP Connectors
+          </p>
+          <div className="space-y-3">
+            {connectors.map((connector) => (
+              <Card key={connector.name} className="bg-card/50 border-border/50 hover:border-primary/30 transition-colors cursor-pointer">
+                <CardContent className="flex items-center gap-4 p-4">
+                  <div className="p-2 rounded-lg bg-muted/30">
+                    <connector.icon className="h-5 w-5 text-muted-foreground" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-semibold text-sm text-foreground">{connector.name}</p>
+                    <p className="text-xs text-muted-foreground">{connector.description}</p>
+                  </div>
+                  <ExternalLink className="h-4 w-4 text-muted-foreground/50 shrink-0" />
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+
+          <div className="pt-2">
+            <p className="text-xs font-semibold tracking-widest text-muted-foreground uppercase mb-3">
+              Coming Soon
+            </p>
+            <div className="flex gap-2 flex-wrap">
+              {comingSoon.map((name) => (
+                <Badge key={name} variant="outline" className="text-xs font-normal px-3 py-1.5">
+                  {name}
+                </Badge>
+              ))}
             </div>
-            <CardTitle className="text-base">Jira / Incident Systems</CardTitle>
-            <Badge variant="outline" className="text-xs">Embedded</Badge>
           </div>
-        </CardHeader>
-        <CardContent className="pt-0 space-y-3">
-          <p className="text-sm text-muted-foreground mb-3">Allow Workspace AI to:</p>
-          <div className="flex items-center justify-between p-3 rounded-lg bg-muted/20">
-            <Label className="text-sm">Create tickets</Label>
-            <Switch
-              checked={settings.jiraCreateTickets}
-              onCheckedChange={(checked) => setSettings({ ...settings, jiraCreateTickets: checked })}
-            />
-          </div>
-          <div className="flex items-center justify-between p-3 rounded-lg bg-muted/20">
-            <Label className="text-sm">Update fields (status, assignee, due date) when user confirms</Label>
-            <Switch
-              checked={settings.jiraUpdateFields}
-              onCheckedChange={(checked) => setSettings({ ...settings, jiraUpdateFields: checked })}
-            />
-          </div>
-          <div className="flex items-center justify-between p-3 rounded-lg bg-muted/20">
-            <div>
-              <Label className="text-sm">Suggest closing/resolving tickets based on conversation threads</Label>
-              <p className="text-xs text-muted-foreground mt-1">Optional</p>
-            </div>
-            <Switch
-              checked={settings.jiraSuggestClose}
-              onCheckedChange={(checked) => setSettings({ ...settings, jiraSuggestClose: checked })}
-            />
-          </div>
+        </div>
+      </div>
+
+      {/* Setup Steps */}
+      <div>
+        <p className="text-xs font-semibold tracking-widest text-primary uppercase mb-2">Setup</p>
+        <h3 className="text-2xl font-extrabold text-foreground mb-6" style={{ fontFamily: "'Georgia', serif" }}>
+          How to Connect an App
+        </h3>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {steps.map((step) => (
+            <Card key={step.number} className="bg-card/50 border-border/50">
+              <CardContent className="p-5">
+                <div className="w-8 h-8 rounded-md bg-primary text-primary-foreground flex items-center justify-center text-sm font-bold mb-3">
+                  {step.number}
+                </div>
+                <p className="font-semibold text-sm text-foreground mb-2">{step.title}</p>
+                <p className="text-xs text-muted-foreground leading-relaxed">{step.description}</p>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+
+      {/* Help banner */}
+      <Card className="bg-amber-50/50 dark:bg-amber-950/20 border-amber-200/50 dark:border-amber-800/30">
+        <CardContent className="p-4">
+          <p className="text-sm text-foreground">
+            Need help? Post in <span className="font-mono font-semibold">#help-enterprise-ai</span> on Slack. Full connector guides and the MCP roadmap are on Confluence.
+          </p>
         </CardContent>
       </Card>
     </div>
